@@ -1,0 +1,22 @@
+{
+  "name": "@dandori/ui",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup --config ../../tsup.config.ts"
+  },
+  "keywords": [],
+  "author": "Hiroki Miyaji",
+  "license": "MIT",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "@mirohq/miro-api": "^2.0.2"
+  },
+  "peerDependencies": {
+    "@dandori/core": "workspace:*"
+  }
+}
