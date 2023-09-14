@@ -1,5 +1,3 @@
-# dandori
-
-段取り(dandori)
+# dandori/cli
 
 *This project is experimental.*

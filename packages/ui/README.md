@@ -1,5 +1,3 @@
-# dandori
-
-段取り(dandori)
+# dandori/ui
 
 *This project is experimental.*

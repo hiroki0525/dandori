@@ -1,0 +1,51 @@
+{
+  "name": "dandori",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "ts-node-esm src/main.ts",
+    "build": "turbo build",
+    "prepare": "husky install",
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+  },
+  "keywords": [],
+  "author": "Hiroki Miyaji",
+  "license": "MIT",
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
+    "@types/node": "18.17.14",
+    "@typescript-eslint/eslint-plugin": "6.6.0",
+    "@typescript-eslint/parser": "6.6.0",
+    "eslint": "8.48.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.0",
+    "eslint-plugin-import": "2.28.1",
+    "eslint-plugin-unused-imports": "3.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "3.0.3",
+    "tsup": "^7.2.0",
+    "tsx": "^3.12.10",
+    "turbo": "^1.10.13",
+    "typescript": "5.2.2"
+  },
+  "packageManager": "pnpm@8.7.5",
+  "engines": {
+    "node": ">=18.17.1",
+    "pnpm": "8.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,yml,yaml,css,scss,ts,tsx,md}": [
+      "prettier --write"
+    ]
+  }
+}
