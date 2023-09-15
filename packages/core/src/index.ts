@@ -1,4 +1,4 @@
-import "dotenv/config";
+import {configDotenv} from 'dotenv';
 import OpenAI from "openai";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
@@ -9,6 +9,7 @@ const defaultChatGPTFunctionCallModel: ChatGPTFunctionCallModel =
 export type GenerateDandoriTasksOptions = {
   chatGPTModel?: ChatGPTFunctionCallModel;
   openaiApiKey?: string;
+  envFilePath?: string;
 };
 
 export type DandoriTask = {
@@ -71,6 +72,12 @@ export default async function generateDandoriTasks(
   source: string,
   options?: GenerateDandoriTasksOptions,
 ): Promise<DandoriTask[] | null> {
+  const loadEnvResult = configDotenv({
+    path: options?.envFilePath,
+  })
+  if (loadEnvResult.error) {
+    throw loadEnvResult.error
+  }
   const openai = new OpenAI({
     apiKey: options?.openaiApiKey ?? process.env.OPENAI_API_KEY,
   });
@@ -111,12 +118,14 @@ export default async function generateDandoriTasks(
   return tasks as DandoriTask[];
 }
 
-// const test = `
-// My tasks
-// * Send email to John
-// * Send email to Mary
-// * Send email to Peter
-// * Report to your supervisor that I sent email to John, Mary and Peter
-// `;
-//
-// generateDandoriTasks(test);
+const test = `
+My tasks
+* Send email to John
+* Send email to Mary
+* Send email to Peter
+* Report to your supervisor that I sent email to John, Mary and Peter
+`;
+
+generateDandoriTasks(test, {
+  envFilePath: "../../.env",
+});
