@@ -1,15 +1,13 @@
 {
-  "name": "dandori",
+  "name": "@dandori/monorepo",
   "version": "0.0.1",
+  "private": true,
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiroki0525/dandori.git"
+    "url": "https://github.com/hiroki0525/dandori.git"
   },
-  "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "ts-node-esm src/main.ts",
     "build": "turbo build",
     "prepare": "husky install",
     "publish-packages": "pnpm build && changeset version && changeset publish"
@@ -51,5 +49,8 @@
     "*.{js,json,yml,yaml,css,scss,ts,tsx,md}": [
       "prettier --write"
     ]
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
