@@ -2,13 +2,17 @@
   "name": "dandori",
   "version": "0.0.1",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiroki0525/dandori.git"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "ts-node-esm src/main.ts",
     "build": "turbo build",
     "prepare": "husky install",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+    "publish-packages": "pnpm build && changeset version && changeset publish"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",
