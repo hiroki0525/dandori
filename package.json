@@ -10,7 +10,9 @@
   "scripts": {
     "build": "turbo build",
     "prepare": "husky install",
-    "publish-packages": "pnpm build && changeset version && changeset publish"
+    "publish-packages": "pnpm build && changeset version && changeset publish",
+    "precli": "pnpm build",
+    "cli": "pnpm --filter @dandori/cli run dev"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",

@@ -1,5 +1,6 @@
-import {configDotenv} from 'dotenv';
+import { configDotenv } from "dotenv";
 import OpenAI from "openai";
+import path from "path";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 
@@ -68,15 +69,20 @@ const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
 
 const functionCallName = "get_tasks_flow";
 
+function generateEnvPath(envFilePath?: string): string | undefined {
+  const initCwd = process.env.INIT_CWD;
+  return envFilePath ? path.join(initCwd, envFilePath) : `${initCwd}/.env`;
+}
+
 export default async function generateDandoriTasks(
   source: string,
   options?: GenerateDandoriTasksOptions,
 ): Promise<DandoriTask[] | null> {
   const loadEnvResult = configDotenv({
-    path: options?.envFilePath,
-  })
+    path: generateEnvPath(options?.envFilePath),
+  });
   if (loadEnvResult.error) {
-    throw loadEnvResult.error
+    throw loadEnvResult.error;
   }
   const openai = new OpenAI({
     apiKey: options?.openaiApiKey ?? process.env.OPENAI_API_KEY,

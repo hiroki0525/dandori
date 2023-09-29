@@ -13,6 +13,7 @@ const program = new Command(packageJson.name)
   .argument("<input-file>")
   .usage(`${chalk.green("<input-file>")} [options]`)
   .option("-o, --output-file <output-file>")
+  .option("-e, --env-file <env-file>")
   .action((iFile) => {
     inputFile = iFile;
   })
@@ -21,8 +22,10 @@ const program = new Command(packageJson.name)
 const opts = program.opts();
 
 const source = await readFile(inputFile);
-const tasks = await generateDandoriTasks(source.toString());
-const { outputFile } = opts;
+const { outputFile, envFile } = opts;
+const tasks = await generateDandoriTasks(source.toString(), {
+  envFilePath: envFile,
+});
 const jsonStringTasks = JSON.stringify(tasks, null, 2);
 if (outputFile) {
   await writeFile(outputFile, jsonStringTasks);
