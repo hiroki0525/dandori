@@ -117,15 +117,3 @@ export default async function generateDandoriTasks(
 
   return tasks as DandoriTask[];
 }
-
-const test = `
-My tasks
-* Send email to John
-* Send email to Mary
-* Send email to Peter
-* Report to your supervisor that I sent email to John, Mary and Peter
-`;
-
-generateDandoriTasks(test, {
-  envFilePath: "../../.env",
-});
