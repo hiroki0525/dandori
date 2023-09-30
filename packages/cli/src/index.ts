@@ -5,6 +5,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import { readFile, writeFile } from "fs/promises";
 import generateDandoriTasks from "@dandori/core";
+import { generateDandoriFilePath } from "../../libs";
 
 let inputFile = "";
 
@@ -21,7 +22,7 @@ const program = new Command(packageJson.name)
 
 const opts = program.opts();
 
-const source = await readFile(inputFile);
+const source = await readFile(generateDandoriFilePath(inputFile));
 const { outputFile, envFile } = opts;
 const tasks = await generateDandoriTasks(source.toString(), {
   envFilePath: envFile,
