@@ -68,6 +68,9 @@ importers:
       '@dandori/core':
         specifier: workspace:*
         version: link:../core
+      '@dandori/libs':
+        specifier: workspace:*
+        version: link:../libs
       '@dandori/ui':
         specifier: workspace:*
         version: link:../ui
@@ -80,12 +83,17 @@ importers:
 
   packages/core:
     dependencies:
+      '@dandori/libs':
+        specifier: workspace:*
+        version: link:../libs
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
       openai:
         specifier: ^4.10.0
         version: 4.10.0
+
+  packages/libs: {}
 
   packages/ui:
     dependencies:

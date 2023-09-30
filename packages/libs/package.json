@@ -1,12 +1,12 @@
 {
-  "name": "@dandori/core",
-  "version": "0.0.3",
+  "name": "@dandori/libs",
+  "version": "0.0.1",
   "private": false,
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/hiroki0525/dandori.git",
-    "directory": "packages/core"
+    "directory": "packages/libs"
   },
   "files": [
     "dist"
@@ -24,9 +24,5 @@
   "keywords": [],
   "author": "Hiroki Miyaji",
   "license": "MIT",
-  "dependencies": {
-    "dotenv": "^16.3.1",
-    "openai": "^4.10.0",
-    "@dandori/libs": "workspace:*"
-  }
+  "devDependencies": {}
 }

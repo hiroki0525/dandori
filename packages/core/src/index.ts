@@ -1,6 +1,6 @@
 import { configDotenv } from "dotenv";
 import OpenAI from "openai";
-import { generateDandoriFilePath } from "../../libs";
+import { generateDandoriFilePath } from "@dandori/libs";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 

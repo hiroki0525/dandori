@@ -5,7 +5,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import { readFile, writeFile } from "fs/promises";
 import generateDandoriTasks from "@dandori/core";
-import { generateDandoriFilePath } from "../../libs";
+import { generateDandoriFilePath } from "@dandori/libs";
 
 let inputFile = "";
 
