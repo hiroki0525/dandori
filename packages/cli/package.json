@@ -19,6 +19,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
+    "predev": "pnpm -F @dandori/monorepo build",
     "dev": "dist/index.js"
   },
   "bin": {

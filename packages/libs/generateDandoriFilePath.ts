@@ -1,12 +1,12 @@
 import path from "path";
 
 export function generateDandoriFilePath(filePath?: string): string {
-  const initCwd = process.env.INIT_CWD as string;
+  const cwd = process.cwd();
   if (!filePath) {
-    return initCwd;
+    return cwd;
   }
   if (path.isAbsolute(filePath)) {
     return filePath;
   }
-  return path.join(initCwd, filePath);
+  return path.join(cwd, filePath);
 }
