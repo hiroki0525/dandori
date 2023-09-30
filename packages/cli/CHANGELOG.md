@@ -1,5 +1,11 @@
 # @dandori/cli
 
+## 0.0.4
+
+### Patch Changes
+
+- [`47c2663`](https://github.com/hiroki0525/dandori/commit/47c26631d0fe17fdeff9498c6c9a8d050432377c) Thanks [@hiroki0525](https://github.com/hiroki0525)! - fix cli error
+
 ## 0.0.3
 
 ### Patch Changes
