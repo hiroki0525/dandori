@@ -1,5 +1,12 @@
 # @dandori/ui
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`912a615`](https://github.com/hiroki0525/dandori/commit/912a615fa726620de73c3909d64b0c9aecca2049)]:
+  - @dandori/core@0.0.5
+
 ## 0.0.3
 
 ### Patch Changes
