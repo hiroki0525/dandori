@@ -3,6 +3,7 @@ declare module "process" {
     namespace NodeJS {
       interface ProcessEnv {
         MIRO_ACCESS_TOKEN: string;
+        MIRO_BOARD_ID: string;
       }
     }
   }

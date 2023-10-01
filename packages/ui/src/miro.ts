@@ -3,17 +3,19 @@ import { DandoriTask } from "@dandori/core";
 
 export type GenerateDandoriMiroCardsOptions = {
   miroAccessToken?: string;
+  boardId?: Parameters<MiroApi["getBoard"]>[0];
 };
 
 export async function generateDandoriMiroCards(
   tasks: DandoriTask[],
-  boardId: Parameters<MiroApi["getBoard"]>[0],
   options?: GenerateDandoriMiroCardsOptions,
 ): Promise<void> {
   const miroApi = new MiroApi(
     options?.miroAccessToken || process.env.MIRO_ACCESS_TOKEN,
   );
-  const miroBoard = await miroApi.getBoard(boardId);
+  const miroBoard = await miroApi.getBoard(
+    options?.boardId || process.env.MIRO_BOARD_ID,
+  );
   const taskCardMap = new WeakMap<DandoriTask, CardItem>();
   for await (const task of tasks) {
     const card = await miroBoard.createCardItem({
