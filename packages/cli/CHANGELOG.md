@@ -1,5 +1,12 @@
 # @dandori/cli
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`f485fbd`](https://github.com/hiroki0525/dandori/commit/f485fbd6a91591e1d5c1d2e7bcd7173bc6c9bd57)]:
+  - @dandori/ui@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes

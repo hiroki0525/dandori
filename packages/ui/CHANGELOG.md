@@ -1,5 +1,11 @@
 # @dandori/ui
 
+## 0.0.7
+
+### Patch Changes
+
+- [#15](https://github.com/hiroki0525/dandori/pull/15) [`f485fbd`](https://github.com/hiroki0525/dandori/commit/f485fbd6a91591e1d5c1d2e7bcd7173bc6c9bd57) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add process.env.MIRO_BOARD_ID
+
 ## 0.0.6
 
 ### Patch Changes
