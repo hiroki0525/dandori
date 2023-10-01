@@ -18,15 +18,19 @@ export type DandoriTask = {
   name: string;
   description?: string;
   deadline?: string;
-  assignee?: string;
+  assignee?: {
+    id: string;
+    name: string;
+  };
   toTaskIdList: string[];
   fromTaskIdList: string[];
 };
 
 type FunctionCallValue = {
-  type: "string" | "array";
+  type: "string" | "array" | "object";
   description?: string;
   items?: FunctionCallValue;
+  properties?: Record<string, FunctionCallValue>;
 };
 
 const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
@@ -48,8 +52,19 @@ const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
       description: "The task deadline",
     },
     assignee: {
-      type: "string",
+      type: "object",
       description: "The task assignee",
+      properties: {
+        id: {
+          type: "string",
+          description:
+            "The task assignee ID. If not provided, return generated unique ID",
+        },
+        name: {
+          type: "string",
+          description: "The task assignee name.",
+        },
+      },
     },
     toTaskIdList: {
       type: "array",
@@ -66,6 +81,13 @@ const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
       },
     },
   } as const;
+
+const requiredProperties: readonly (keyof DandoriTask)[] = [
+  "id",
+  "name",
+  "toTaskIdList",
+  "fromTaskIdList",
+];
 
 const functionCallName = "get_tasks_flow";
 
@@ -99,7 +121,7 @@ export default async function generateDandoriTasks(
               type: "array",
               items: {
                 type: "object",
-                required: ["id", "name", "to", "from"],
+                required: requiredProperties,
                 properties: functionCallTaskProperties,
               },
             },
@@ -114,7 +136,5 @@ export default async function generateDandoriTasks(
     return null;
   }
   const { tasks } = JSON.parse(resFunctionCall.arguments);
-  console.dir(tasks, { depth: null });
-
   return tasks as DandoriTask[];
 }
