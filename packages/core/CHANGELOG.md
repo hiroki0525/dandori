@@ -1,5 +1,11 @@
 # @dandori/core
 
+## 0.0.6
+
+### Patch Changes
+
+- [#13](https://github.com/hiroki0525/dandori/pull/13) [`f28f756`](https://github.com/hiroki0525/dandori/commit/f28f7563654e3aa31a03504390e0e1463d2aeaa8) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add task assignee id
+
 ## 0.0.5
 
 ### Patch Changes
