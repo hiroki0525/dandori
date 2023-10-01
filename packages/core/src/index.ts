@@ -67,6 +67,13 @@ const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
     },
   } as const;
 
+const requiredProperties: readonly (keyof DandoriTask)[] = [
+  "id",
+  "name",
+  "toTaskIdList",
+  "fromTaskIdList",
+];
+
 const functionCallName = "get_tasks_flow";
 
 export default async function generateDandoriTasks(
@@ -99,7 +106,7 @@ export default async function generateDandoriTasks(
               type: "array",
               items: {
                 type: "object",
-                required: ["id", "name", "to", "from"],
+                required: requiredProperties,
                 properties: functionCallTaskProperties,
               },
             },
