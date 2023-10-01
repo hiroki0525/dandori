@@ -114,7 +114,5 @@ export default async function generateDandoriTasks(
     return null;
   }
   const { tasks } = JSON.parse(resFunctionCall.arguments);
-  console.dir(tasks, { depth: null });
-
   return tasks as DandoriTask[];
 }
