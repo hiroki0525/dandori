@@ -1,5 +1,11 @@
 # @dandori/cli
 
+## 0.0.8
+
+### Patch Changes
+
+- [#17](https://github.com/hiroki0525/dandori/pull/17) [`4c10d0e`](https://github.com/hiroki0525/dandori/commit/4c10d0ebd48207bd00cad1d5ffc9ac7ded0b72ef) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add cli miro
+
 ## 0.0.7
 
 ### Patch Changes
