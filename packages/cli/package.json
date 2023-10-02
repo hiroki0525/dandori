@@ -19,11 +19,13 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "predev": "pnpm -F @dandori/monorepo build",
-    "dev": "dist/index.js"
+    "predev": "pnpm -w build",
+    "dev:core": "pnpm predev && dist/core.js",
+    "dev:miro": "pnpm predev && dist/miro.js"
   },
   "bin": {
-    "dandori": "./dist/index.js"
+    "dandori": "./dist/core.js",
+    "dandori-miro": "./dist/miro.js"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",
