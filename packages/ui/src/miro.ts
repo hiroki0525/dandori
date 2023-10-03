@@ -1,10 +1,13 @@
-import { CardItem, MiroApi } from "@mirohq/miro-api";
+import { MiroApi } from "@mirohq/miro-api";
 import { DandoriTask } from "@dandori/core";
 
 export type GenerateDandoriMiroCardsOptions = {
   miroAccessToken?: string;
   boardId?: Parameters<MiroApi["getBoard"]>[0];
 };
+
+const defaultCardMarginX = 100;
+const defaultCardMarginY = defaultCardMarginX / 2;
 
 export async function generateDandoriMiroCards(
   tasks: DandoriTask[],
@@ -16,45 +19,42 @@ export async function generateDandoriMiroCards(
   const miroBoard = await miroApi.getBoard(
     options?.boardId || process.env.MIRO_BOARD_ID,
   );
-  const taskCardMap = new WeakMap<DandoriTask, CardItem>();
-  for await (const task of tasks) {
-    const card = await miroBoard.createCardItem({
-      data: {
-        title: task.name,
-        description: task.description,
-      },
-    });
-    taskCardMap.set(task, card);
-  }
-  const taskMap = tasks.reduce<Record<string, DandoriTask>>((result, task) => {
-    result[task.id] = task;
-    return result;
-  }, {});
-  const taskViewRelations: string[] = [];
+  const taskMap = tasks.reduce<Record<DandoriTask["id"], DandoriTask>>(
+    (result, task) => {
+      result[task.id] = task;
+      return result;
+    },
+    {},
+  );
+  const taskRelations: string[] = [];
   const delimiter = "-";
-  const getCardIdByTask = (task: DandoriTask): string =>
-    (taskCardMap.get(task) as CardItem).id;
   tasks.forEach((task) => {
-    const taskUiId = getCardIdByTask(task);
+    const taskId = task.id;
     task.fromTaskIdList.forEach((fromTaskId) => {
-      const fromTaskViewId = getCardIdByTask(taskMap[fromTaskId]);
-      taskViewRelations.push(`${fromTaskViewId}${delimiter}${taskUiId}`);
+      taskRelations.push(`${fromTaskId}${delimiter}${taskId}`);
     });
     task.toTaskIdList.forEach((toTaskId) => {
-      const toTaskViewId = getCardIdByTask(taskMap[toTaskId]);
-      taskViewRelations.push(`${taskUiId}${delimiter}${toTaskViewId}`);
+      taskRelations.push(`${taskId}${delimiter}${toTaskId}`);
     });
   });
-  const taskUiIdRelationsList = Array.from(new Set(taskViewRelations)).map(
-    (toFrom) => toFrom.split(delimiter),
+  const taskFromToIdsList = Array.from(new Set(taskRelations)).map((toFrom) =>
+    toFrom.split(delimiter),
   );
-  for await (const taskUiIdRelations of taskUiIdRelationsList) {
+  for await (const taskFromToIds of taskFromToIdsList) {
+    for await (const task of tasks) {
+      const card = await miroBoard.createCardItem({
+        data: {
+          title: task.name,
+          description: task.description,
+        },
+      });
+    }
     await miroBoard.createConnector({
       startItem: {
-        id: taskUiIdRelations[0],
+        id: taskFromToIds[0],
       },
       endItem: {
-        id: taskUiIdRelations[1],
+        id: taskFromToIds[1],
       },
     });
   }
