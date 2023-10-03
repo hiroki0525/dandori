@@ -90,8 +90,8 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       openai:
-        specifier: ^4.10.0
-        version: 4.10.0
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/libs: {}
 
@@ -221,7 +221,7 @@ packages:
       semver: 7.5.4
       spawndamnit: 2.0.0
       term-size: 2.2.1
-      tty-table: 4.2.1
+      tty-table: 4.2.2
     dev: true
 
   /@changesets/config@2.3.1:
@@ -551,8 +551,8 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@eslint-community/regexpp@4.9.0:
-    resolution: {integrity: sha512-zJmuCWj2VLBt4c25CfBIbMZLGLyhkvs7LznyVX5HfpzeocThgIj5XQK4L+g3U36mMcx8bPMhGyPpwCATamC4jQ==}
+  /@eslint-community/regexpp@4.9.1:
+    resolution: {integrity: sha512-Y27x+MBLjXa+0JWDhykM3+JE+il3kHKAEqabfEWq3SDhZjLYb6/BHL/JKFnH3fe207JaXkyDo685Oc2Glt6ifA==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dev: true
 
@@ -701,7 +701,7 @@ packages:
   /@types/node-fetch@2.6.6:
     resolution: {integrity: sha512-95X8guJYhfqiuVVhRFxVQcf4hW/2bCuoPwDasMf/531STFoNoWTT7YDnWdXHEZKqAGUigmpG31r2FE70LwnzJw==}
     dependencies:
-      '@types/node': 18.18.0
+      '@types/node': 18.18.3
       form-data: 4.0.0
     dev: false
 
@@ -713,8 +713,8 @@ packages:
     resolution: {integrity: sha512-ZE/5aB73CyGqgQULkLG87N9GnyGe5TcQjv34pwS8tfBs1IkCh0ASM69mydb2znqd6v0eX+9Ytvk6oQRqu8T1Vw==}
     dev: true
 
-  /@types/node@18.18.0:
-    resolution: {integrity: sha512-3xA4X31gHT1F1l38ATDIL9GpRLdwVhnEFC8Uikv5ZLlXATwrCYyPq7ZWHxzxc3J/30SUiwiYT+bQe0/XvKlWbw==}
+  /@types/node@18.18.3:
+    resolution: {integrity: sha512-0OVfGupTl3NBFr8+iXpfZ8NR7jfFO+P1Q+IO/q0wbo02wYkP5gy36phojeYWpLQ6WAMjl+VfmqUk2YbUfp0irA==}
     dev: false
 
   /@types/normalize-package-data@2.4.2:
@@ -736,7 +736,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@eslint-community/regexpp': 4.9.0
+      '@eslint-community/regexpp': 4.9.1
       '@typescript-eslint/parser': 6.6.0(eslint@8.48.0)(typescript@5.2.2)
       '@typescript-eslint/scope-manager': 6.6.0
       '@typescript-eslint/type-utils': 6.6.0(eslint@8.48.0)(typescript@5.2.2)
@@ -1722,7 +1722,7 @@ packages:
     hasBin: true
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.48.0)
-      '@eslint-community/regexpp': 4.9.0
+      '@eslint-community/regexpp': 4.9.1
       '@eslint/eslintrc': 2.1.2
       '@eslint/js': 8.48.0
       '@humanwhocodes/config-array': 0.11.11
@@ -2917,11 +2917,11 @@ packages:
       mimic-fn: 4.0.0
     dev: true
 
-  /openai@4.10.0:
-    resolution: {integrity: sha512-II4b5/7qzwYkqA9MSjgqdofCc798EW+dtF2h6qNaVLet+qO7FShAJTWnoyzb50J4ZH1rPxRFAsmDLIhY3PT6DQ==}
+  /openai@4.11.0:
+    resolution: {integrity: sha512-zU/MJxZTijL0Ym6CKoQPbnmHDsGZlH9g5zorPszdc41OyLxlhnlrorBcGzmGS9qpnjGGNncJR1hfg/mXq0OONw==}
     hasBin: true
     dependencies:
-      '@types/node': 18.18.0
+      '@types/node': 18.18.3
       '@types/node-fetch': 2.6.6
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
@@ -3287,8 +3287,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup@3.29.3:
-    resolution: {integrity: sha512-T7du6Hum8jOkSWetjRgbwpM6Sy0nECYrYRSmZjayFcOddtKJWU4d17AC3HNUk7HRuqy4p+G7aEZclSHytqUmEg==}
+  /rollup@3.29.4:
+    resolution: {integrity: sha512-oWzmBZwvYrU0iJHtDmhsm662rC15FRXmcjCk1xD771dFDx5jJ02ufAQQTn0etB2emNk4J9EZg/yWKpsn9BWGRw==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3725,7 +3725,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 4.0.1
       resolve-from: 5.0.0
-      rollup: 3.29.3
+      rollup: 3.29.4
       source-map: 0.8.0-beta.0
       sucrase: 3.34.0
       tree-kill: 1.2.2
@@ -3746,8 +3746,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /tty-table@4.2.1:
-    resolution: {integrity: sha512-xz0uKo+KakCQ+Dxj1D/tKn2FSyreSYWzdkL/BYhgN6oMW808g8QRMuh1atAV9fjTPbWBjfbkKQpI/5rEcnAc7g==}
+  /tty-table@4.2.2:
+    resolution: {integrity: sha512-2gvCArMZLxgvpZ2NvQKdnYWIFLe7I/z5JClMuhrDXunmKgSZcQKcZRjN9XjAFiToMz2pUo1dEIXyrm0AwgV5Tw==}
     engines: {node: '>=8.0.0'}
     hasBin: true
     dependencies:
