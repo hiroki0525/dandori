@@ -24,5 +24,8 @@
   "keywords": [],
   "author": "Hiroki Miyaji",
   "license": "MIT",
-  "devDependencies": {}
+  "dependencies": {
+    "pino": "^8.16.0",
+    "pino-pretty": "^10.2.3"
+  }
 }

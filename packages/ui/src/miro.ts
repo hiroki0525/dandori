@@ -1,13 +1,48 @@
 import { MiroApi } from "@mirohq/miro-api";
 import { DandoriTask } from "@dandori/core";
+import FlatToNested from "flat-to-nested";
+import TreeModel from "tree-model";
+import { logger } from "@dandori/libs";
 
 export type GenerateDandoriMiroCardsOptions = {
   miroAccessToken?: string;
   boardId?: Parameters<MiroApi["getBoard"]>[0];
 };
 
-const defaultCardMarginX = 100;
+// miro settings
+const defaultCardMarginX = 130;
 const defaultCardMarginY = defaultCardMarginX / 2;
+const defaultCardWidth = defaultCardMarginX * 2; // min: 256
+const defaultCardHeight = defaultCardMarginY * 2;
+
+// tree model js settings
+const taskParentPropName = "fromTaskId";
+const taskChildrenPropName = "nextTasks";
+const flatToNested = new FlatToNested({
+  parent: taskParentPropName,
+  children: taskChildrenPropName,
+});
+const tree = new TreeModel({
+  childrenPropertyName: taskChildrenPropName,
+});
+type DandoriTaskWithNextTasks = DandoriTask & {
+  [taskChildrenPropName]?: DandoriTaskWithNextTasks[];
+};
+
+async function runPromisesSequentially(runPromises: (() => Promise<void>)[]) {
+  let currentRunPromiseCount = 0;
+  const maxRunPromiseCount = runPromises.length;
+  const timeId = setInterval(() => {
+    logger.info(
+      `task running... (${currentRunPromiseCount}/${maxRunPromiseCount})`,
+    );
+  }, 5000);
+  for (const runPromise of runPromises) {
+    await runPromise();
+    currentRunPromiseCount++;
+  }
+  clearInterval(timeId);
+}
 
 export async function generateDandoriMiroCards(
   tasks: DandoriTask[],
@@ -15,47 +50,93 @@ export async function generateDandoriMiroCards(
 ): Promise<void> {
   const miroApi = new MiroApi(
     options?.miroAccessToken || process.env.MIRO_ACCESS_TOKEN,
+    undefined,
+    (...thing) => {
+      logger.debug(thing);
+    },
   );
   const miroBoard = await miroApi.getBoard(
     options?.boardId || process.env.MIRO_BOARD_ID,
   );
-  const taskMap = tasks.reduce<Record<DandoriTask["id"], DandoriTask>>(
-    (result, task) => {
-      result[task.id] = task;
-      return result;
-    },
-    {},
-  );
-  const taskRelations: string[] = [];
-  const delimiter = "-";
-  tasks.forEach((task) => {
-    const taskId = task.id;
-    task.fromTaskIdList.forEach((fromTaskId) => {
-      taskRelations.push(`${fromTaskId}${delimiter}${taskId}`);
-    });
-    task.toTaskIdList.forEach((toTaskId) => {
-      taskRelations.push(`${taskId}${delimiter}${toTaskId}`);
-    });
+  const taskFlat: (DandoriTask & { [taskParentPropName]?: string })[] = tasks
+    .map((task) =>
+      task.fromTaskIdList.length === 0
+        ? task
+        : task.fromTaskIdList.map((fromTaskId) => ({
+            ...task,
+            [taskParentPropName]: fromTaskId,
+          })),
+    )
+    .flat();
+  const convertedFlatToNestedTasks = flatToNested.convert(taskFlat);
+  const nestedTasks: DandoriTaskWithNextTasks[] = Array.isArray(
+    convertedFlatToNestedTasks,
+  )
+    ? convertedFlatToNestedTasks
+    : [convertedFlatToNestedTasks];
+  const taskNodes = nestedTasks.map((nestedTask) => tree.parse(nestedTask));
+  const runCreateCardPromises: (() => Promise<void>)[] = [];
+  const taskIdCardIdMap = new Map<string, string>();
+  taskNodes.forEach((taskNode) => {
+    taskNode.walk(
+      { strategy: "breadth" },
+      (node) => {
+        const task = node.model as DandoriTaskWithNextTasks;
+        runCreateCardPromises.push(async () => {
+          const card = await miroBoard.createCardItem({
+            data: {
+              title: task.name,
+              description: task.description,
+              dueDate: task.deadline ? new Date(task.deadline) : undefined,
+            },
+            geometry: {
+              width: defaultCardWidth,
+              height: defaultCardHeight,
+            },
+            position: {
+              x:
+                (defaultCardMarginX + defaultCardWidth) *
+                (node.getPath().length - 1),
+              y: (defaultCardMarginY + defaultCardHeight) * node.getIndex(),
+            },
+          });
+          taskIdCardIdMap.set(task.id, card.id);
+        });
+        return true;
+      },
+      undefined,
+    );
   });
-  const taskFromToIdsList = Array.from(new Set(taskRelations)).map((toFrom) =>
-    toFrom.split(delimiter),
-  );
-  for await (const taskFromToIds of taskFromToIdsList) {
-    for await (const task of tasks) {
-      const card = await miroBoard.createCardItem({
-        data: {
-          title: task.name,
-          description: task.description,
-        },
-      });
-    }
-    await miroBoard.createConnector({
-      startItem: {
-        id: taskFromToIds[0],
+  await runPromisesSequentially(runCreateCardPromises);
+
+  const runCreateConnectorPromises: (() => Promise<void>)[] = [];
+  taskNodes.forEach((taskNode) => {
+    taskNode.walk(
+      { strategy: "breadth" },
+      (node) => {
+        const task = node.model as DandoriTaskWithNextTasks;
+        const nextTasks = task[taskChildrenPropName];
+        if (!nextTasks?.length) {
+          return true;
+        }
+        const startCardId = taskIdCardIdMap.get(task.id);
+        nextTasks.forEach((nextTask) => {
+          runCreateConnectorPromises.push(async () => {
+            await miroBoard.createConnector({
+              startItem: {
+                id: startCardId,
+              },
+              endItem: {
+                id: taskIdCardIdMap.get(nextTask.id),
+              },
+            });
+          });
+        });
+        return true;
       },
-      endItem: {
-        id: taskFromToIds[1],
-      },
-    });
-  }
+      undefined,
+    );
+  });
+  await runPromisesSequentially(runCreateConnectorPromises);
+  logger.info("Create miro cards and connectors successfully!");
 }
