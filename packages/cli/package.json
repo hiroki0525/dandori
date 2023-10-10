@@ -19,9 +19,8 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "predev": "pnpm -w build",
-    "dev:core": "pnpm predev && dist/core.js",
-    "dev:miro": "pnpm predev && dist/miro.js"
+    "dev:core": "tsx ./src/core.ts",
+    "dev:miro": "tsx ./src/miro.ts"
   },
   "bin": {
     "dandori": "./dist/core.js",

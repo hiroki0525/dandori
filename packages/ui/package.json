@@ -24,9 +24,10 @@
   "keywords": [],
   "author": "Hiroki Miyaji",
   "license": "MIT",
-  "devDependencies": {},
   "dependencies": {
-    "@mirohq/miro-api": "^2.0.2"
+    "@mirohq/miro-api": "^2.0.2",
+    "flat-to-nested": "^1.1.1",
+    "tree-model": "^1.0.7"
   },
   "peerDependencies": {
     "@dandori/core": "workspace:*"

@@ -25,8 +25,8 @@
   "author": "Hiroki Miyaji",
   "license": "MIT",
   "dependencies": {
+    "@dandori/libs": "workspace:*",
     "dotenv": "^16.3.1",
-    "openai": "^4.10.0",
-    "@dandori/libs": "workspace:*"
+    "openai": "^4.11.1"
   }
 }

@@ -1,6 +1,6 @@
 import { configDotenv } from "dotenv";
 import OpenAI from "openai";
-import { generateDandoriFilePath } from "@dandori/libs";
+import { generateDandoriFilePath, logger } from "@dandori/libs";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 
@@ -22,7 +22,6 @@ export type DandoriTask = {
     id: string;
     name: string;
   };
-  toTaskIdList: string[];
   fromTaskIdList: string[];
 };
 
@@ -33,11 +32,15 @@ type FunctionCallValue = {
   properties?: Record<string, FunctionCallValue>;
 };
 
+const excludePropertyPrompt =
+  "If not provided, this property shouldn't be included.";
+const generateIdPrompt = "If not provided, return generated unique ID.";
+
 const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
   {
     id: {
       type: "string",
-      description: "The task ID. If not provided, return generated unique ID",
+      description: `The task ID. ${generateIdPrompt}`,
     },
     name: {
       type: "string",
@@ -49,28 +52,20 @@ const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
     },
     deadline: {
       type: "string",
-      description: "The task deadline",
+      description: `The task deadline which is used by JavaScript Date constructor arguments. ${excludePropertyPrompt}`,
     },
     assignee: {
       type: "object",
-      description: "The task assignee",
+      description: `The task assignee. ${excludePropertyPrompt}`,
       properties: {
         id: {
           type: "string",
-          description:
-            "The task assignee ID. If not provided, return generated unique ID",
+          description: `The task assignee ID. ${generateIdPrompt}`,
         },
         name: {
           type: "string",
           description: "The task assignee name.",
         },
-      },
-    },
-    toTaskIdList: {
-      type: "array",
-      description: "Task IDs to be executed after this task",
-      items: {
-        type: "string",
       },
     },
     fromTaskIdList: {
@@ -85,7 +80,6 @@ const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
 const requiredProperties: readonly (keyof DandoriTask)[] = [
   "id",
   "name",
-  "toTaskIdList",
   "fromTaskIdList",
 ];
 
@@ -99,6 +93,7 @@ export default async function generateDandoriTasks(
     path: generateDandoriFilePath(options?.envFilePath ?? ".env"),
   });
   if (loadEnvResult.error) {
+    logger.error(loadEnvResult.error);
     throw loadEnvResult.error;
   }
   const openai = new OpenAI({
@@ -136,5 +131,6 @@ export default async function generateDandoriTasks(
     return null;
   }
   const { tasks } = JSON.parse(resFunctionCall.arguments);
+  logger.debug(tasks);
   return tasks as DandoriTask[];
 }

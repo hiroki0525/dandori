@@ -1,10 +1,48 @@
-import { CardItem, MiroApi } from "@mirohq/miro-api";
+import { MiroApi } from "@mirohq/miro-api";
 import { DandoriTask } from "@dandori/core";
+import FlatToNested from "flat-to-nested";
+import TreeModel from "tree-model";
+import { logger } from "@dandori/libs";
 
 export type GenerateDandoriMiroCardsOptions = {
   miroAccessToken?: string;
   boardId?: Parameters<MiroApi["getBoard"]>[0];
 };
+
+// miro settings
+const defaultCardMarginX = 130;
+const defaultCardMarginY = defaultCardMarginX / 2;
+const defaultCardWidth = defaultCardMarginX * 2; // min: 256
+const defaultCardHeight = defaultCardMarginY * 2;
+
+// tree model js settings
+const taskParentPropName = "fromTaskId";
+const taskChildrenPropName = "nextTasks";
+const flatToNested = new FlatToNested({
+  parent: taskParentPropName,
+  children: taskChildrenPropName,
+});
+const tree = new TreeModel({
+  childrenPropertyName: taskChildrenPropName,
+});
+type DandoriTaskWithNextTasks = DandoriTask & {
+  [taskChildrenPropName]?: DandoriTaskWithNextTasks[];
+};
+
+async function runPromisesSequentially(runPromises: (() => Promise<void>)[]) {
+  let currentRunPromiseCount = 0;
+  const maxRunPromiseCount = runPromises.length;
+  const timeId = setInterval(() => {
+    logger.info(
+      `task running... (${currentRunPromiseCount}/${maxRunPromiseCount})`,
+    );
+  }, 5000);
+  for (const runPromise of runPromises) {
+    await runPromise();
+    currentRunPromiseCount++;
+  }
+  clearInterval(timeId);
+}
 
 export async function generateDandoriMiroCards(
   tasks: DandoriTask[],
@@ -12,50 +50,93 @@ export async function generateDandoriMiroCards(
 ): Promise<void> {
   const miroApi = new MiroApi(
     options?.miroAccessToken || process.env.MIRO_ACCESS_TOKEN,
+    undefined,
+    (...thing) => {
+      logger.debug(thing);
+    },
   );
   const miroBoard = await miroApi.getBoard(
     options?.boardId || process.env.MIRO_BOARD_ID,
   );
-  const taskCardMap = new WeakMap<DandoriTask, CardItem>();
-  for await (const task of tasks) {
-    const card = await miroBoard.createCardItem({
-      data: {
-        title: task.name,
-        description: task.description,
+  const taskFlat: (DandoriTask & { [taskParentPropName]?: string })[] = tasks
+    .map((task) =>
+      task.fromTaskIdList.length === 0
+        ? task
+        : task.fromTaskIdList.map((fromTaskId) => ({
+            ...task,
+            [taskParentPropName]: fromTaskId,
+          })),
+    )
+    .flat();
+  const convertedFlatToNestedTasks = flatToNested.convert(taskFlat);
+  const nestedTasks: DandoriTaskWithNextTasks[] = Array.isArray(
+    convertedFlatToNestedTasks,
+  )
+    ? convertedFlatToNestedTasks
+    : [convertedFlatToNestedTasks];
+  const taskNodes = nestedTasks.map((nestedTask) => tree.parse(nestedTask));
+  const runCreateCardPromises: (() => Promise<void>)[] = [];
+  const taskIdCardIdMap = new Map<string, string>();
+  taskNodes.forEach((taskNode) => {
+    taskNode.walk(
+      { strategy: "breadth" },
+      (node) => {
+        const task = node.model as DandoriTaskWithNextTasks;
+        runCreateCardPromises.push(async () => {
+          const card = await miroBoard.createCardItem({
+            data: {
+              title: task.name,
+              description: task.description,
+              dueDate: task.deadline ? new Date(task.deadline) : undefined,
+            },
+            geometry: {
+              width: defaultCardWidth,
+              height: defaultCardHeight,
+            },
+            position: {
+              x:
+                (defaultCardMarginX + defaultCardWidth) *
+                (node.getPath().length - 1),
+              y: (defaultCardMarginY + defaultCardHeight) * node.getIndex(),
+            },
+          });
+          taskIdCardIdMap.set(task.id, card.id);
+        });
+        return true;
       },
-    });
-    taskCardMap.set(task, card);
-  }
-  const taskMap = tasks.reduce<Record<string, DandoriTask>>((result, task) => {
-    result[task.id] = task;
-    return result;
-  }, {});
-  const taskViewRelations: string[] = [];
-  const delimiter = "-";
-  const getCardIdByTask = (task: DandoriTask): string =>
-    (taskCardMap.get(task) as CardItem).id;
-  tasks.forEach((task) => {
-    const taskUiId = getCardIdByTask(task);
-    task.fromTaskIdList.forEach((fromTaskId) => {
-      const fromTaskViewId = getCardIdByTask(taskMap[fromTaskId]);
-      taskViewRelations.push(`${fromTaskViewId}${delimiter}${taskUiId}`);
-    });
-    task.toTaskIdList.forEach((toTaskId) => {
-      const toTaskViewId = getCardIdByTask(taskMap[toTaskId]);
-      taskViewRelations.push(`${taskUiId}${delimiter}${toTaskViewId}`);
-    });
+      undefined,
+    );
   });
-  const taskUiIdRelationsList = Array.from(new Set(taskViewRelations)).map(
-    (toFrom) => toFrom.split(delimiter),
-  );
-  for await (const taskUiIdRelations of taskUiIdRelationsList) {
-    await miroBoard.createConnector({
-      startItem: {
-        id: taskUiIdRelations[0],
+  await runPromisesSequentially(runCreateCardPromises);
+
+  const runCreateConnectorPromises: (() => Promise<void>)[] = [];
+  taskNodes.forEach((taskNode) => {
+    taskNode.walk(
+      { strategy: "breadth" },
+      (node) => {
+        const task = node.model as DandoriTaskWithNextTasks;
+        const nextTasks = task[taskChildrenPropName];
+        if (!nextTasks?.length) {
+          return true;
+        }
+        const startCardId = taskIdCardIdMap.get(task.id);
+        nextTasks.forEach((nextTask) => {
+          runCreateConnectorPromises.push(async () => {
+            await miroBoard.createConnector({
+              startItem: {
+                id: startCardId,
+              },
+              endItem: {
+                id: taskIdCardIdMap.get(nextTask.id),
+              },
+            });
+          });
+        });
+        return true;
       },
-      endItem: {
-        id: taskUiIdRelations[1],
-      },
-    });
-  }
+      undefined,
+    );
+  });
+  await runPromisesSequentially(runCreateConnectorPromises);
+  logger.info("Create miro cards and connectors successfully!");
 }
