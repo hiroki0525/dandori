@@ -1,5 +1,14 @@
 # @dandori/core
 
+## 0.0.9
+
+### Patch Changes
+
+- [#19](https://github.com/hiroki0525/dandori/pull/19) [`6ff6bda`](https://github.com/hiroki0525/dandori/commit/6ff6bdac60de580243cf9b19007ce656d3711ed2) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add miro card position
+
+- Updated dependencies [[`6ff6bda`](https://github.com/hiroki0525/dandori/commit/6ff6bdac60de580243cf9b19007ce656d3711ed2)]:
+  - @dandori/libs@0.0.9
+
 ## 0.0.6
 
 ### Patch Changes
