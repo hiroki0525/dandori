@@ -3,21 +3,14 @@ import { Command } from "commander";
 import chalk from "chalk";
 import generateDandoriTasks, { DandoriTask } from "@dandori/core";
 import { readFile } from "fs/promises";
-import { generateDandoriFilePath } from "@dandori/libs";
+import { generateDandoriFilePath, logger } from "@dandori/libs";
 
 export class DandoriBaseCli {
   private program: Command;
   private inputFile: string = "";
 
   constructor() {
-    this.program = new Command(packageJson.name)
-      .version(packageJson.version)
-      .argument("<input-file>")
-      .usage(`${chalk.green("<input-file>")} [options]`)
-      .option("-e, --env-file <env-file>")
-      .action((iFile) => {
-        this.inputFile = iFile;
-      });
+    this.program = this.buildCommand();
   }
 
   async generateDandoriTasks(): Promise<DandoriTask[]> {
@@ -29,9 +22,20 @@ export class DandoriBaseCli {
       envFilePath: envFile,
     });
     if (!tasks) {
-      console.error("Failed to generate dandori tasks.");
+      logger.error("Failed to generate dandori tasks.");
       process.exit(1);
     }
     return tasks;
+  }
+
+  protected buildCommand(): Command {
+    return new Command(packageJson.name)
+      .version(packageJson.version)
+      .argument("<input-file>")
+      .usage(`${chalk.green("<input-file>")} [options]`)
+      .option("-e, --env-file <env-file>")
+      .action((iFile) => {
+        this.inputFile = iFile;
+      });
   }
 }
