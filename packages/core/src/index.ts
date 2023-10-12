@@ -1,6 +1,11 @@
 import { configDotenv } from "dotenv";
 import OpenAI from "openai";
-import { generateDandoriFilePath, logger } from "@dandori/libs";
+import {
+  generateDandoriFilePath,
+  logger,
+  runPromisesSequentially,
+} from "@dandori/libs";
+import { ChatCompletion } from "openai/src/resources/chat/completions";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 
@@ -101,30 +106,36 @@ export default async function generateDandoriTasks(
   });
   const model: ChatGPTFunctionCallModel =
     options?.chatGPTModel ?? defaultChatGPTFunctionCallModel;
-  const completion = await openai.chat.completions.create({
-    messages: [{ role: "user", content: source }],
-    model,
-    function_call: { name: functionCallName },
-    functions: [
-      {
-        name: functionCallName,
-        description: `Get the tasks flow which will be used like Gantt chart.`,
-        parameters: {
-          type: "object",
-          properties: {
-            tasks: {
-              type: "array",
-              items: {
+  const [completion] = await runPromisesSequentially(
+    [
+      () =>
+        openai.chat.completions.create({
+          messages: [{ role: "user", content: source }],
+          model,
+          function_call: { name: functionCallName },
+          functions: [
+            {
+              name: functionCallName,
+              description: `Get the tasks flow which will be used like Gantt chart.`,
+              parameters: {
                 type: "object",
-                required: requiredProperties,
-                properties: functionCallTaskProperties,
+                properties: {
+                  tasks: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      required: requiredProperties,
+                      properties: functionCallTaskProperties,
+                    },
+                  },
+                },
               },
             },
-          },
-        },
-      },
+          ],
+        }) as unknown as Promise<ChatCompletion>,
     ],
-  });
+    "Generating tasks",
+  );
 
   const resFunctionCall = completion.choices[0].message.function_call;
   if (!resFunctionCall) {
