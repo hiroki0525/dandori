@@ -37,7 +37,14 @@ function iterateBreadthNodes<T>(
   nodes.forEach((node, index) => {
     node.walk(
       { strategy: "breadth" },
-      (node) => callback(node, index),
+      (node) => {
+        const { model } = node;
+        // There are cases that only children property exists when the node is a root node.
+        if (!model.id) {
+          return true;
+        }
+        return callback(node, index);
+      },
       undefined,
     );
   });
@@ -89,9 +96,6 @@ export async function generateDandoriMiroCards(
   const uniqueTaskIdSet: Set<string> = new Set();
   iterateBreadthNodes(taskNodes, (node, nodesIndex) => {
     const { model } = node;
-    if (!model) {
-      return true;
-    }
     const task = model as DandoriTaskWithNextTasks;
     const taskId = task.id;
     if (uniqueTaskIdSet.has(taskId)) {
@@ -102,6 +106,8 @@ export async function generateDandoriMiroCards(
       (sum, maxNodesBreadth, currentIndex) =>
         currentIndex < nodesIndex ? sum + maxNodesBreadth : sum,
     );
+    const nodeDepthIndex = node.getPath().length - 1;
+    const nodeBreathIndex = node.getIndex();
     const baseCardParams = {
       data: {
         title: task.name,
@@ -112,11 +118,9 @@ export async function generateDandoriMiroCards(
         height: defaultCardHeight,
       },
       position: {
-        x:
-          (defaultCardMarginX + defaultCardWidth) * (node.getPath().length - 1),
+        x: (defaultCardMarginX + defaultCardWidth) * nodeDepthIndex,
         y:
-          baseBreadthNodesLength +
-          node.getIndex() +
+          (baseBreadthNodesLength + nodeBreathIndex) *
           (defaultCardMarginY + defaultCardHeight),
       },
     };
@@ -142,7 +146,8 @@ export async function generateDandoriMiroCards(
 
   const runCreateConnectorPromises: (() => Promise<void>)[] = [];
   iterateBreadthNodes(taskNodes, (node) => {
-    const task = node.model as DandoriTaskWithNextTasks;
+    const { model } = node;
+    const task = model as DandoriTaskWithNextTasks;
     const nextTasks = task[taskChildrenPropName];
     if (!nextTasks?.length) {
       return true;

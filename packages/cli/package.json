@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "dev:core": "tsx ./src/core.ts",
-    "dev:miro": "tsx ./src/miro.ts"
+    "dev:miro": "tsx ./src/miro.ts ./tmp/test.md"
   },
   "bin": {
     "dandori": "./dist/core.js",
