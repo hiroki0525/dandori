@@ -1,5 +1,16 @@
 # @dandori/core
 
+## 0.0.10
+
+### Patch Changes
+
+- [#22](https://github.com/hiroki0525/dandori/pull/22) [`f073eb3`](https://github.com/hiroki0525/dandori/commit/f073eb398c70bb2790b7ae566a383816b299ff69) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Fix multiple flows
+
+- [#21](https://github.com/hiroki0525/dandori/pull/21) [`a7d8dee`](https://github.com/hiroki0525/dandori/commit/a7d8dee4fa72a79a6fe18c11d5d4503b7bddd911) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add app miro card
+
+- Updated dependencies [[`a7d8dee`](https://github.com/hiroki0525/dandori/commit/a7d8dee4fa72a79a6fe18c11d5d4503b7bddd911)]:
+  - @dandori/libs@0.0.10
+
 ## 0.0.9
 
 ### Patch Changes

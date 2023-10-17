@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.10
+
+### Patch Changes
+
+- [#21](https://github.com/hiroki0525/dandori/pull/21) [`a7d8dee`](https://github.com/hiroki0525/dandori/commit/a7d8dee4fa72a79a6fe18c11d5d4503b7bddd911) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add app miro card
+
 ## 0.0.9
 
 ### Patch Changes
