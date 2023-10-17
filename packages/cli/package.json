@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "dev:core": "tsx ./src/core.ts",
-    "dev:miro": "tsx ./src/miro.ts"
+    "dev:miro": "tsx ./src/miro.ts ./tmp/test.md"
   },
   "bin": {
     "dandori": "./dist/core.js",
@@ -29,12 +29,11 @@
   "keywords": [],
   "author": "Hiroki Miyaji",
   "license": "MIT",
-  "devDependencies": {},
   "dependencies": {
-    "commander": "^11.0.0",
-    "chalk": "^5.3.0",
     "@dandori/core": "workspace:*",
+    "@dandori/libs": "workspace:*",
     "@dandori/ui": "workspace:*",
-    "@dandori/libs": "workspace:*"
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0"
   }
 }
