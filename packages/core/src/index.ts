@@ -5,7 +5,6 @@ import {
   logger,
   runPromisesSequentially,
 } from "@dandori/libs";
-import { ChatCompletion } from "openai/src/resources/chat/completions";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 
@@ -132,7 +131,7 @@ export default async function generateDandoriTasks(
               },
             },
           ],
-        }) as unknown as Promise<ChatCompletion>,
+        }) as unknown as Promise<OpenAI.ChatCompletion>,
     ],
     "Generating tasks",
   );
