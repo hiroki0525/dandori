@@ -1,7 +1,6 @@
 {
     "env": {
-        "node": true,
-        "jest": true
+        "node": true
     },
     "extends": [
         "eslint:recommended",
@@ -11,7 +10,8 @@
         "prettier"
     ],
     "plugins": [
-        "unused-imports"
+        "unused-imports",
+        "vitest"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {

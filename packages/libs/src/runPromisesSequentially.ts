@@ -13,7 +13,12 @@ export async function runPromisesSequentially<T>(
   }, 5000);
   const results: T[] = [];
   for (const runPromise of runPromises) {
-    results.push(await runPromise());
+    try {
+      results.push(await runPromise());
+    } catch (e) {
+      clearInterval(timeId);
+      throw e;
+    }
     currentRunPromiseCount++;
   }
   clearInterval(timeId);

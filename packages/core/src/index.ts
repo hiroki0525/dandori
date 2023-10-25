@@ -5,6 +5,7 @@ import {
   logger,
   runPromisesSequentially,
 } from "@dandori/libs";
+import { ChatCompletionMessage } from "openai/src/resources/chat/completions";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 
@@ -13,7 +14,6 @@ const defaultChatGPTFunctionCallModel: ChatGPTFunctionCallModel =
 
 export type GenerateDandoriTasksOptions = {
   chatGPTModel?: ChatGPTFunctionCallModel;
-  openaiApiKey?: string;
   envFilePath?: string;
 };
 
@@ -92,17 +92,17 @@ const functionCallName = "get_tasks_flow";
 export default async function generateDandoriTasks(
   source: string,
   options?: GenerateDandoriTasksOptions,
-): Promise<DandoriTask[] | null> {
-  const loadEnvResult = configDotenv({
-    path: generateDandoriFilePath(options?.envFilePath ?? ".env"),
-  });
-  if (loadEnvResult.error) {
-    logger.error(loadEnvResult.error);
-    throw loadEnvResult.error;
+): Promise<DandoriTask[]> {
+  if (!process.env.OPENAI_API_KEY) {
+    const loadEnvResult = configDotenv({
+      path: generateDandoriFilePath(options?.envFilePath ?? ".env"),
+    });
+    if (loadEnvResult.error) {
+      logger.error(loadEnvResult.error);
+      throw loadEnvResult.error;
+    }
   }
-  const openai = new OpenAI({
-    apiKey: options?.openaiApiKey ?? process.env.OPENAI_API_KEY,
-  });
+  const openai = new OpenAI();
   const model: ChatGPTFunctionCallModel =
     options?.chatGPTModel ?? defaultChatGPTFunctionCallModel;
   const [completion] = await runPromisesSequentially(
@@ -115,7 +115,8 @@ export default async function generateDandoriTasks(
           functions: [
             {
               name: functionCallName,
-              description: `Get the tasks flow which will be used like Gantt chart.`,
+              description:
+                "Get the tasks flow which will be used like Gantt chart.",
               parameters: {
                 type: "object",
                 properties: {
@@ -136,10 +137,9 @@ export default async function generateDandoriTasks(
     "Generating tasks",
   );
 
-  const resFunctionCall = completion.choices[0].message.function_call;
-  if (!resFunctionCall) {
-    return null;
-  }
+  // https://platform.openai.com/docs/api-reference/chat/create#:~:text=Specifying%20a%20particular%20function%20via%20%7B%22name%22%3A%20%22my_function%22%7D%20forces%20the%20model%20to%20call%20that%20function.
+  const resFunctionCall = completion.choices[0].message
+    .function_call as ChatCompletionMessage.FunctionCall;
   const { tasks } = JSON.parse(resFunctionCall.arguments);
   logger.debug(tasks);
   return tasks as DandoriTask[];

@@ -25,7 +25,7 @@
   "author": "Hiroki Miyaji",
   "license": "MIT",
   "dependencies": {
-    "pino": "^8.16.0",
+    "pino": "^8.16.1",
     "pino-pretty": "^10.2.3"
   }
 }
