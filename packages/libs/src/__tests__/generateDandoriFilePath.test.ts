@@ -23,7 +23,7 @@ describe("generateDandoriFilePath", () => {
       const basePath = "/path/to/file";
       const relativeFilePath = `.${basePath}`;
 
-      it("returns arguments path", () => {
+      it("returns arguments path with cwd", () => {
         expect(generateDandoriFilePath(relativeFilePath)).toBe(
           `${process.cwd()}${basePath}`,
         );

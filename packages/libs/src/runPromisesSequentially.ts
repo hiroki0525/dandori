@@ -13,13 +13,14 @@ export async function runPromisesSequentially<T>(
   }, 5000);
   const results: T[] = [];
   for (const runPromise of runPromises) {
+    currentRunPromiseCount++;
     try {
       results.push(await runPromise());
     } catch (e) {
       clearInterval(timeId);
+      logger.error(e);
       throw e;
     }
-    currentRunPromiseCount++;
   }
   clearInterval(timeId);
   logger.info(`${runningLogPrefix}... Done!`);
