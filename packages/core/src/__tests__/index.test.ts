@@ -41,7 +41,6 @@ vi.mock("@dandori/libs", async () => {
   return {
     ...actualModule,
     logger: {
-      ...actualModule.logger,
       error: vi.fn(),
       debug: vi.fn(),
       info: vi.fn(),
