@@ -19,12 +19,12 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "dev:core": "tsx ./src/core.ts",
-    "dev:miro": "tsx ./src/miro.ts ./tmp/test.md"
+    "dev:core": "tsx src/core/cli.ts",
+    "dev:miro": "tsx src/miro/cli.ts"
   },
   "bin": {
-    "dandori": "./dist/core.js",
-    "dandori-miro": "./dist/miro.js"
+    "dandori": "./dist/core/cli.js",
+    "dandori-miro": "./dist/miro/cli.js"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",
