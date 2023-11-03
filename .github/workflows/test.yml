@@ -16,5 +16,3 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Test
         run: pnpm t
-      - name: Build
-        run: pnpm build
