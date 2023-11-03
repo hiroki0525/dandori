@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 
-export default defineConfig({
+const sharedConfig = defineConfig({
   test: {
     environment: "node",
     typecheck: {
@@ -9,3 +9,5 @@ export default defineConfig({
     },
   },
 });
+
+export default sharedConfig;
