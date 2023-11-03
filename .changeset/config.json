@@ -7,5 +7,8 @@
   "linked": [["@dandori/*"]],
   "access": "public",
   "baseBranch": "main",
-  "ignore": []
+  "ignore": [],
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "updateInternalDependents": "always"
+  }
 }
