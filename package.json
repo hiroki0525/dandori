@@ -12,7 +12,14 @@
     "prepare": "husky install",
     "test": "turbo test"
   },
-  "keywords": [],
+  "keywords": [
+    "javascript",
+    "typescript",
+    "chatgpt",
+    "openai",
+    "gpt-4",
+    "gpt-3"
+  ],
   "author": "Hiroki Miyaji",
   "license": "MIT",
   "devDependencies": {
