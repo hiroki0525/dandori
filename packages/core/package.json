@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "dev": "tsx ./src/index.ts",
-    "test": "vitest run -c ../../vitest.config.ts"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",

@@ -5,7 +5,7 @@ import {
   logger,
   runPromisesSequentially,
 } from "@dandori/libs";
-import { ChatCompletionMessage } from "openai/src/resources/chat/completions";
+import { ChatCompletionMessage } from "openai/resources";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 

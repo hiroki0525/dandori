@@ -31,9 +31,9 @@ vi.mock("@dandori/ui", () => ({
   generateDandoriMiroCards: vi.fn(),
 }));
 
-describe("DandoriCoreCli", () => {
-  const inputFileName = "input.txt";
-  const inputFileText = "test";
+describe("DandoriMiroCli", () => {
+  const inputFileName = "DandoriMiroCli.txt";
+  const inputFileText = "DandoriMiroCli";
   const boardId = "boardId";
   const loadProcessArgv = (options: string[]) => {
     process.argv = ["node", "cli.js", inputFileName, ...options];
