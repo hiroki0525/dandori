@@ -36,7 +36,8 @@ vi.mock("openai", () => {
 });
 
 vi.mock("@dandori/libs", async () => {
-  const actualModule = await import("@dandori/libs");
+  const actualModule =
+    await vi.importActual<typeof import("@dandori/libs")>("@dandori/libs");
   return {
     ...actualModule,
     logger: {

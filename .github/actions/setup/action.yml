@@ -1,4 +1,4 @@
-name: setup
+name: Setup
 description: "Setup Node.js, pnpm and dependencies"
 
 runs:
