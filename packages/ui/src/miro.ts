@@ -5,8 +5,7 @@ import TreeModel from "tree-model";
 import { logger, runPromisesSequentially } from "@dandori/libs";
 
 export type GenerateDandoriMiroCardsOptions = {
-  miroAccessToken?: string;
-  boardId?: Parameters<MiroApi["getBoard"]>[0];
+  boardId: Parameters<MiroApi["getBoard"]>[0];
   isAppCard?: boolean;
 };
 
@@ -52,18 +51,16 @@ function iterateBreadthNodes<T>(
 
 export async function generateDandoriMiroCards(
   tasks: DandoriTask[],
-  options?: GenerateDandoriMiroCardsOptions,
+  options: GenerateDandoriMiroCardsOptions,
 ): Promise<void> {
   const miroApi = new MiroApi(
-    options?.miroAccessToken || process.env.MIRO_ACCESS_TOKEN,
+    process.env.MIRO_ACCESS_TOKEN,
     undefined,
     (...thing) => {
       logger.debug(thing);
     },
   );
-  const miroBoard = await miroApi.getBoard(
-    options?.boardId || process.env.MIRO_BOARD_ID,
-  );
+  const miroBoard = await miroApi.getBoard(options.boardId);
   const taskFlat: (DandoriTask & { [taskParentPropName]?: string })[] = tasks
     .map((task) =>
       task.fromTaskIdList.length === 0
@@ -74,14 +71,18 @@ export async function generateDandoriMiroCards(
           })),
     )
     .flat();
-  const convertedFlatToNestedTasks = flatToNested.convert(taskFlat);
-  const nestedTasks: DandoriTaskWithNextTasks[] = Array.isArray(
-    convertedFlatToNestedTasks,
-  )
-    ? convertedFlatToNestedTasks
-    : [convertedFlatToNestedTasks];
-  const taskNodes = nestedTasks.map((nestedTask) => tree.parse(nestedTask));
-
+  const convertedFlatToNestedTask = flatToNested.convert(taskFlat);
+  let taskNodes: TreeModel.Node<DandoriTaskWithNextTasks>[];
+  // There are cases that only children property exists when the node is a root node.
+  if (convertedFlatToNestedTask.id) {
+    taskNodes = [tree.parse(convertedFlatToNestedTask)];
+  } else {
+    taskNodes = (
+      convertedFlatToNestedTask[
+        taskChildrenPropName
+      ] as unknown as DandoriTaskWithNextTasks[]
+    ).map((task) => tree.parse(task));
+  }
   const maxNodesBreadthList: number[] = Array(taskNodes.length).fill(1);
   iterateBreadthNodes(taskNodes, (node, nodesIndex) => {
     maxNodesBreadthList[nodesIndex] = Math.max(
@@ -105,6 +106,7 @@ export async function generateDandoriMiroCards(
     const baseBreadthNodesLength = maxNodesBreadthList.reduce(
       (sum, maxNodesBreadth, currentIndex) =>
         currentIndex < nodesIndex ? sum + maxNodesBreadth : sum,
+      0,
     );
     const nodeDepthIndex = node.getPath().length - 1;
     const nodeBreathIndex = node.getIndex();

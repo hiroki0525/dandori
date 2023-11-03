@@ -19,7 +19,8 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "dev": "tsx ./src/index.ts"
+    "dev": "tsx ./scripts/generateDandoriMiroCards.ts",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",

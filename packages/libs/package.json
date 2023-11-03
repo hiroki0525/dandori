@@ -19,13 +19,14 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "dev": "tsx ./src/index.ts"
+    "dev": "tsx ./src/index.ts",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",
   "license": "MIT",
   "dependencies": {
-    "pino": "^8.16.0",
+    "pino": "^8.16.1",
     "pino-pretty": "^10.2.3"
   }
 }
