@@ -13,7 +13,6 @@ import {
 } from "vitest";
 import OpenAI from "openai";
 import { logger, runPromisesSequentially } from "@dandori/libs";
-import * as process from "process";
 
 const openAiResArguments = { tasks: [] } as const;
 vi.mock("openai", () => {
