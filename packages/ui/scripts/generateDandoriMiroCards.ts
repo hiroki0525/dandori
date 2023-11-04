@@ -1,6 +1,13 @@
 import { DandoriTask } from "@dandori/core";
+import { loadEnvFile } from "@dandori/libs";
 import { generateDandoriMiroCards } from "@dandori/ui";
 
+// set environment variables like miro access token
+loadEnvFile();
+
+const boardId = "Your board ID";
+
+// customize tasks as you like
 const tasks: DandoriTask[] = [
   {
     id: "1",
@@ -59,10 +66,6 @@ const tasks: DandoriTask[] = [
     fromTaskIdList: ["6", "7"],
   },
 ];
-
-const boardId = "Your board ID";
-
-process.env.MIRO_ACCESS_TOKEN = "Your Miro access token";
 
 await generateDandoriMiroCards(tasks, {
   boardId,
