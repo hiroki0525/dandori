@@ -10,7 +10,10 @@ import {
   it,
 } from "vitest";
 import DandoriCoreCli from "../index";
-import generateDandoriTasks, { DandoriTask } from "@dandori/core";
+import generateDandoriTasks, {
+  ChatGPTFunctionCallModel,
+  DandoriTask,
+} from "@dandori/core";
 
 const tasks: DandoriTask[] = [
   {
@@ -64,6 +67,23 @@ describe("DandoriCoreCli", () => {
     });
   });
 
+  describe("with -m option", () => {
+    const model: ChatGPTFunctionCallModel = "gpt-4-0613";
+
+    beforeEach(async () => {
+      loadProcessArgv(["-m", model]);
+      await new DandoriCoreCli().run();
+    });
+
+    it("call generateDandoriTasks with envFilePath", () => {
+      expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
+        envFilePath: undefined,
+        chatGPTModel: model,
+        optionalTaskProps: undefined,
+      });
+    });
+  });
+
   describe("with -e option", () => {
     const envFilePath = "/test/.env";
 
@@ -75,6 +95,25 @@ describe("DandoriCoreCli", () => {
     it("call generateDandoriTasks with envFilePath", () => {
       expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
         envFilePath,
+        chatGPTModel: undefined,
+        optionalTaskProps: undefined,
+      });
+    });
+  });
+
+  describe("with -o option", () => {
+    const optionalTaskProps = "deadline,description";
+
+    beforeEach(async () => {
+      loadProcessArgv(["-o", optionalTaskProps]);
+      await new DandoriCoreCli().run();
+    });
+
+    it("call generateDandoriTasks with envFilePath", () => {
+      expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
+        envFilePath: undefined,
+        chatGPTModel: undefined,
+        optionalTaskProps: optionalTaskProps.split(","),
       });
     });
   });
