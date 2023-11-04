@@ -12,11 +12,6 @@ export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 const defaultChatGPTFunctionCallModel: ChatGPTFunctionCallModel =
   "gpt-3.5-turbo-0613";
 
-export type GenerateDandoriTasksOptions = {
-  chatGPTModel?: ChatGPTFunctionCallModel;
-  envFilePath?: string;
-};
-
 export type DandoriTask = {
   id: string;
   name: string;
@@ -27,6 +22,24 @@ export type DandoriTask = {
     name: string;
   };
   fromTaskIdList: string[];
+};
+
+export type DandoriTaskProperty = keyof DandoriTask;
+
+export type DandoriTaskRequiredProperty = Extract<
+  DandoriTaskProperty,
+  "id" | "name" | "fromTaskIdList"
+>;
+
+export type DandoriTaskOptionalProperty = Exclude<
+  DandoriTaskProperty,
+  DandoriTaskRequiredProperty
+>;
+
+export type GenerateDandoriTasksOptions = {
+  chatGPTModel?: ChatGPTFunctionCallModel;
+  envFilePath?: string;
+  filter?: DandoriTaskOptionalProperty[];
 };
 
 type FunctionCallValue = {
@@ -40,52 +53,62 @@ const excludePropertyPrompt =
   "If not provided, this property shouldn't be included.";
 const generateIdPrompt = "If not provided, return generated unique ID.";
 
-const functionCallTaskProperties: Record<keyof DandoriTask, FunctionCallValue> =
-  {
-    id: {
+const requiredFunctionCallTaskProperties: Record<
+  DandoriTaskRequiredProperty,
+  FunctionCallValue
+> = {
+  id: {
+    type: "string",
+    description: `The task ID. ${generateIdPrompt}`,
+  },
+  name: {
+    type: "string",
+    description: "The task name",
+  },
+  fromTaskIdList: {
+    type: "array",
+    description: "Task IDs to be executed before this task",
+    items: {
       type: "string",
-      description: `The task ID. ${generateIdPrompt}`,
     },
-    name: {
-      type: "string",
-      description: "The task name",
-    },
-    description: {
-      type: "string",
-      description: "The task description",
-    },
-    deadline: {
-      type: "string",
-      description: `The task deadline which is used by JavaScript Date constructor arguments. ${excludePropertyPrompt}`,
-    },
-    assignee: {
-      type: "object",
-      description: `The task assignee. ${excludePropertyPrompt}`,
-      properties: {
-        id: {
-          type: "string",
-          description: `The task assignee ID. ${generateIdPrompt}`,
-        },
-        name: {
-          type: "string",
-          description: "The task assignee name.",
-        },
-      },
-    },
-    fromTaskIdList: {
-      type: "array",
-      description: "Task IDs to be executed before this task",
-      items: {
-        type: "string",
-      },
-    },
-  } as const;
+  },
+} as const;
 
-const requiredProperties: readonly (keyof DandoriTask)[] = [
-  "id",
-  "name",
-  "fromTaskIdList",
-];
+const optionalFunctionCallTaskProperties: Record<
+  DandoriTaskOptionalProperty,
+  FunctionCallValue
+> = {
+  description: {
+    type: "string",
+    description: "The task description",
+  },
+  deadline: {
+    type: "string",
+    description: `The task deadline which is used by JavaScript Date constructor arguments. ${excludePropertyPrompt}`,
+  },
+  assignee: {
+    type: "object",
+    description: `The task assignee. ${excludePropertyPrompt}`,
+    properties: {
+      id: {
+        type: "string",
+        description: `The task assignee ID. ${generateIdPrompt}`,
+      },
+      name: {
+        type: "string",
+        description: "The task assignee name.",
+      },
+    },
+  },
+};
+
+const requiredProperties: readonly DandoriTaskRequiredProperty[] = Object.keys(
+  requiredFunctionCallTaskProperties,
+) as DandoriTaskRequiredProperty[];
+
+const optionalProperties: readonly DandoriTaskOptionalProperty[] = Object.keys(
+  optionalFunctionCallTaskProperties,
+) as DandoriTaskOptionalProperty[];
 
 const functionCallName = "get_tasks_flow";
 
@@ -105,6 +128,13 @@ export default async function generateDandoriTasks(
   const openai = new OpenAI();
   const model: ChatGPTFunctionCallModel =
     options?.chatGPTModel ?? defaultChatGPTFunctionCallModel;
+  const filterProperties = options?.filter ?? optionalProperties;
+  const filteredOptionalFunctionCallTaskProperties = Object.fromEntries(
+    filterProperties.map((filterProperty) => [
+      filterProperty,
+      optionalFunctionCallTaskProperties[filterProperty],
+    ]),
+  );
   const [completion] = await runPromisesSequentially(
     [
       () =>
@@ -125,7 +155,10 @@ export default async function generateDandoriTasks(
                     items: {
                       type: "object",
                       required: requiredProperties,
-                      properties: functionCallTaskProperties,
+                      properties: {
+                        ...requiredFunctionCallTaskProperties,
+                        ...filteredOptionalFunctionCallTaskProperties,
+                      },
                     },
                   },
                 },
