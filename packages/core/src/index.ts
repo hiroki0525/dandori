@@ -1,6 +1,5 @@
-import { configDotenv } from "dotenv";
 import OpenAI from "openai";
-import { loadFile, logger, runPromisesSequentially } from "@dandori/libs";
+import { loadEnvFile, logger, runPromisesSequentially } from "@dandori/libs";
 import { ChatCompletionMessage } from "openai/resources";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
@@ -125,13 +124,7 @@ export default async function generateDandoriTasks(
   options?: GenerateDandoriTasksOptions,
 ): Promise<DandoriTask[]> {
   if (!process.env.OPENAI_API_KEY) {
-    const loadEnvResult = configDotenv({
-      path: loadFile(options?.envFilePath ?? ".env"),
-    });
-    if (loadEnvResult.error) {
-      logger.error(loadEnvResult.error);
-      throw loadEnvResult.error;
-    }
+    loadEnvFile(options?.envFilePath);
   }
   const openai = new OpenAI();
   const model: ChatGPTFunctionCallModel =

@@ -1,4 +1,3 @@
-import { mkdir, rm, rmdir, writeFile } from "fs/promises";
 import generateDandoriTasks, {
   ChatGPTFunctionCallModel,
   DandoriTaskOptionalProperty,
@@ -6,19 +5,9 @@ import generateDandoriTasks, {
   DandoriTaskRequiredProperty,
   OptionalAllDandoriTaskPropertiesName,
 } from "../index";
-import {
-  describe,
-  beforeEach,
-  beforeAll,
-  afterEach,
-  afterAll,
-  it,
-  vi,
-  expect,
-  Mock,
-} from "vitest";
+import { describe, beforeEach, afterEach, it, vi, expect, Mock } from "vitest";
 import OpenAI from "openai";
-import { logger, runPromisesSequentially } from "@dandori/libs";
+import { loadEnvFile, logger, runPromisesSequentially } from "@dandori/libs";
 
 const openAiResArguments = { tasks: [] } as const;
 vi.mock("openai", () => {
@@ -54,10 +43,12 @@ vi.mock("@dandori/libs", async () => {
     runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
       Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
     ),
+    loadEnvFile: vi.fn(),
   };
 });
 
 const runPromisesSequentiallyMock = runPromisesSequentially as Mock;
+const loadEnvFileMock = loadEnvFile as Mock;
 
 describe("generateDandoriTasks", () => {
   const openApiKeyPropName = "OPENAI_API_KEY";
@@ -73,75 +64,16 @@ describe("generateDandoriTasks", () => {
   });
 
   describe(`without ${openApiKeyPropName} environment variable`, () => {
-    describe("with valid .env file", () => {
-      describe("no envFilePath argument", () => {
-        const apiKey = "123";
-        const envFileName = ".env";
+    const envFilePath = `./dir/.env`;
 
-        beforeAll(async () => {
-          await writeFile(envFileName, `${openApiKeyPropName}=${apiKey}`);
-        });
-
-        afterAll(async () => {
-          await rm(envFileName);
-        });
-
-        beforeEach(async () => {
-          await generateDandoriTasks("test");
-        });
-
-        it(`loaded ${openApiKeyPropName}`, () => {
-          expect(process.env[openApiKeyPropName]).toBe(apiKey);
-        });
-      });
-
-      describe("envFilePath argument", () => {
-        const apiKey = "456";
-        const envFileDir = "./dir";
-        const envFilePath = `./${envFileDir}/.env`;
-
-        beforeAll(async () => {
-          await mkdir(envFileDir);
-          await writeFile(envFilePath, `${openApiKeyPropName}=${apiKey}`);
-        });
-
-        afterAll(async () => {
-          await rm(envFilePath);
-          await rmdir(envFileDir);
-        });
-
-        beforeEach(async () => {
-          await generateDandoriTasks("test", {
-            envFilePath,
-          });
-        });
-
-        it(`loaded ${openApiKeyPropName}`, () => {
-          expect(process.env[openApiKeyPropName]).toBe(apiKey);
-        });
+    beforeEach(async () => {
+      await generateDandoriTasks("test", {
+        envFilePath,
       });
     });
 
-    describe("without valid .env file", () => {
-      let resultPromise: Promise<unknown>;
-
-      beforeEach(() => {
-        resultPromise = generateDandoriTasks("test", {
-          envFilePath: "./nodir/.env",
-        });
-      });
-
-      it("throw Error", async () => {
-        await expect(resultPromise).rejects.toThrowError();
-      });
-
-      it("called error log", async () => {
-        try {
-          await resultPromise;
-        } catch (e) {
-          expect(logger.error).toBeCalled();
-        }
-      });
+    it("call loadEnvFile with envFilePath argument", () => {
+      expect(loadEnvFileMock).toBeCalledWith(envFilePath);
     });
   });
 
