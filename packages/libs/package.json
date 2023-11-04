@@ -26,6 +26,7 @@
   "author": "Hiroki Miyaji",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "pino": "^8.16.1",
     "pino-pretty": "^10.2.3"
   }

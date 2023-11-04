@@ -30,7 +30,7 @@ vi.mock("@dandori/core", () => ({
 }));
 
 describe("DandoriCoreCli", () => {
-  const mockConsole = vi.spyOn(console, "log");
+  const mockConsole = vi.spyOn(console, "log").mockImplementation(() => {});
   const inputFileName = "DandoriCoreCli.txt";
   const inputFileText = "DandoriCoreCli";
   const loadProcessArgv = (options: string[]) => {

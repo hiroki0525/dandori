@@ -39,8 +39,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(@typescript-eslint/eslint-plugin@6.6.0)(eslint@8.48.0)
       eslint-plugin-vitest:
-        specifier: ^0.3.8
-        version: 0.3.8(@typescript-eslint/eslint-plugin@6.6.0)(eslint@8.48.0)(typescript@5.2.2)(vitest@0.34.6)
+        specifier: ^0.3.9
+        version: 0.3.9(@typescript-eslint/eslint-plugin@6.6.0)(eslint@8.48.0)(typescript@5.2.2)(vitest@0.34.6)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -89,15 +89,15 @@ importers:
       '@dandori/libs':
         specifier: workspace:*
         version: link:../libs
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       openai:
-        specifier: ^4.14.2
-        version: 4.14.2
+        specifier: ^4.15.0
+        version: 4.15.0
 
   packages/libs:
     dependencies:
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       pino:
         specifier: ^8.16.1
         version: 8.16.1
@@ -572,8 +572,8 @@ packages:
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dev: true
 
-  /@eslint/eslintrc@2.1.2:
-    resolution: {integrity: sha512-+wvgpDsrB1YqAMdEUCcnTlpfVBH7Vqn6A/NT3D8WVXFIaKMlErPIZT3oCIAVCOtarRpMtelZLqJeU3t7WY6X6g==}
+  /@eslint/eslintrc@2.1.3:
+    resolution: {integrity: sha512-yZzuIG+jnVu6hNSzFEN07e8BxF3uAzYtQb6uDkaYZLo6oYZDCq454c5kB8zxnzfCYyP4MIuyBn10L0DqwujTmA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
@@ -1902,8 +1902,8 @@ packages:
       eslint-rule-composer: 0.3.0
     dev: true
 
-  /eslint-plugin-vitest@0.3.8(@typescript-eslint/eslint-plugin@6.6.0)(eslint@8.48.0)(typescript@5.2.2)(vitest@0.34.6):
-    resolution: {integrity: sha512-MYQJzg3i+nLkaIQgjnOhtqHYIt0W6nErqAOKI3LTSQ2aOgcNHGYTwOhpnwGC1IXTvGWjKgAwb7rHwLpcHWHSAQ==}
+  /eslint-plugin-vitest@0.3.9(@typescript-eslint/eslint-plugin@6.6.0)(eslint@8.48.0)(typescript@5.2.2)(vitest@0.34.6):
+    resolution: {integrity: sha512-ZGrz8dWFlotM5dwrsMLP4VcY5MizwKNV4JTnY0VKdnuCZ+qeEUMHf1qd8kRGQA3tqLvXcV929wt2ANkduq2Pgw==}
     engines: {node: 14.x || >= 16}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': '*'
@@ -1911,6 +1911,8 @@ packages:
       vitest: '*'
     peerDependenciesMeta:
       '@typescript-eslint/eslint-plugin':
+        optional: true
+      vitest:
         optional: true
     dependencies:
       '@typescript-eslint/eslint-plugin': 6.6.0(@typescript-eslint/parser@6.6.0)(eslint@8.48.0)(typescript@5.2.2)
@@ -1947,7 +1949,7 @@ packages:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.48.0)
       '@eslint-community/regexpp': 4.10.0
-      '@eslint/eslintrc': 2.1.2
+      '@eslint/eslintrc': 2.1.3
       '@eslint/js': 8.48.0
       '@humanwhocodes/config-array': 0.11.13
       '@humanwhocodes/module-importer': 1.0.1
@@ -3194,8 +3196,8 @@ packages:
       mimic-fn: 4.0.0
     dev: true
 
-  /openai@4.14.2:
-    resolution: {integrity: sha512-JGlm7mMC7J+cyQZnQMOH7daD9cBqqWqLtlBsejElEkgoehPrYfdyxSxIGICz5xk4YimbwI5FlLATSVojLtCKXQ==}
+  /openai@4.15.0:
+    resolution: {integrity: sha512-LPNgtG9gxRphH+7AUM5Q/dS/iWuM0UOKf+723e2kvyENNVMjYFrnQjCdcb2nNJY7+ao+J2jP/PfsXBLN8Si7iA==}
     hasBin: true
     dependencies:
       '@types/node': 18.18.8
@@ -3439,7 +3441,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 2.1.0
-      yaml: 2.3.3
+      yaml: 2.3.4
     dev: true
 
   /postcss@8.4.31:
@@ -4693,8 +4695,8 @@ packages:
     engines: {node: '>= 14'}
     dev: true
 
-  /yaml@2.3.3:
-    resolution: {integrity: sha512-zw0VAJxgeZ6+++/su5AFoqBbZbrEakwu+X0M5HmcwUiBL7AzcuPKjj5we4xfQLp78LkEMpD0cOnUhmgOVy3KdQ==}
+  /yaml@2.3.4:
+    resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
     dev: true
 
