@@ -7,7 +7,7 @@ import generateDandoriTasks, {
   OptionalTaskPropsOption,
 } from "@dandori/core";
 import { readFile } from "fs/promises";
-import { generateDandoriFilePath } from "@dandori/libs";
+import { loadFile } from "@dandori/libs";
 
 export default class DandoriCoreCli {
   private inputFile: string = "";
@@ -44,7 +44,7 @@ export default class DandoriCoreCli {
 
   protected async generateDandoriTasks(): Promise<DandoriTask[]> {
     this.program.parse(process.argv);
-    const source = await readFile(generateDandoriFilePath(this.inputFile));
+    const source = await readFile(loadFile(this.inputFile));
     const { envFile, optionalTaskProps, model } = this.program.opts<{
       envFile?: string;
       optionalTaskProps?: string;

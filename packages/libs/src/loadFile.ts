@@ -1,6 +1,6 @@
 import path from "path";
 
-export function generateDandoriFilePath(filePath?: string): string {
+export function loadFile(filePath?: string): string {
   const cwd = process.cwd();
   if (!filePath) {
     return cwd;
