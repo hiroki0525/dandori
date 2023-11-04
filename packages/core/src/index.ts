@@ -36,10 +36,22 @@ export type DandoriTaskOptionalProperty = Exclude<
   DandoriTaskRequiredProperty
 >;
 
+export type OptionalAllDandoriTaskPropertiesName = "all";
+const optionalAllDandoriTaskPropertiesName: OptionalAllDandoriTaskPropertiesName =
+  "all";
+export type OptionalTaskPropsOption = (
+  | DandoriTaskOptionalProperty
+  | OptionalAllDandoriTaskPropertiesName
+)[];
+const notIncludeAdditionalAllPropsName = (
+  props: OptionalTaskPropsOption,
+): props is DandoriTaskOptionalProperty[] =>
+  !props.includes(optionalAllDandoriTaskPropertiesName);
+
 export type GenerateDandoriTasksOptions = {
   chatGPTModel?: ChatGPTFunctionCallModel;
   envFilePath?: string;
-  filter?: DandoriTaskOptionalProperty[];
+  optionalTaskProps?: OptionalTaskPropsOption;
 };
 
 type FunctionCallValue = {
@@ -128,11 +140,16 @@ export default async function generateDandoriTasks(
   const openai = new OpenAI();
   const model: ChatGPTFunctionCallModel =
     options?.chatGPTModel ?? defaultChatGPTFunctionCallModel;
-  const filterProperties = options?.filter ?? optionalProperties;
+  const optionalTaskProps = options?.optionalTaskProps ?? [];
+  const additionalProperties = notIncludeAdditionalAllPropsName(
+    optionalTaskProps,
+  )
+    ? optionalTaskProps
+    : optionalProperties;
   const filteredOptionalFunctionCallTaskProperties = Object.fromEntries(
-    filterProperties.map((filterProperty) => [
-      filterProperty,
-      optionalFunctionCallTaskProperties[filterProperty],
+    additionalProperties.map((additionalProperty) => [
+      additionalProperty,
+      optionalFunctionCallTaskProperties[additionalProperty],
     ]),
   );
   const [completion] = await runPromisesSequentially(

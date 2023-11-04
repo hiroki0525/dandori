@@ -4,6 +4,7 @@ import generateDandoriTasks, {
   DandoriTaskOptionalProperty,
   DandoriTaskProperty,
   DandoriTaskRequiredProperty,
+  OptionalAllDandoriTaskPropertiesName,
 } from "../index";
 import {
   describe,
@@ -189,7 +190,7 @@ describe("generateDandoriTasks", () => {
         },
       },
     } as const;
-    const requiredProperties: readonly DandoriTaskRequiredProperty[] = [
+    const requiredProperties: DandoriTaskRequiredProperty[] = [
       "id",
       "name",
       "fromTaskIdList",
@@ -198,7 +199,7 @@ describe("generateDandoriTasks", () => {
     const createOpenAiChatGptArguments = ({
       source,
       model = "gpt-3.5-turbo-0613",
-      filter = Object.keys(functionCallTaskProperties) as DandoriTaskProperty[],
+      filter = requiredProperties,
     }: {
       source: string;
       model?: ChatGPTFunctionCallModel;
@@ -234,6 +235,8 @@ describe("generateDandoriTasks", () => {
       ],
     });
 
+    let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
+
     beforeEach(() => {
       process.env[openApiKeyPropName] = apiKey;
     });
@@ -243,7 +246,6 @@ describe("generateDandoriTasks", () => {
     });
 
     describe("with options which include model argument", () => {
-      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
       const source = "with model argument";
       const model = "gpt-4-0613";
 
@@ -258,59 +260,55 @@ describe("generateDandoriTasks", () => {
           createOpenAiChatGptArguments({ source, model }),
         );
       });
-
-      it("called logger.debug with valid arguments", () => {
-        expect(logger.debug).toBeCalledWith(openAiResArguments.tasks);
-      });
-
-      it("return tasks", () => {
-        expect(result).toStrictEqual(openAiResArguments.tasks);
-      });
-
-      it("called log with valid statement", () => {
-        expect(runPromisesSequentiallyMock.mock.calls[0][1]).toContain(
-          logPrefix,
-        );
-      });
     });
 
-    describe("with options which include filter argument", () => {
-      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
-      const source = "with filter argument";
-      const filter: DandoriTaskOptionalProperty[] = ["deadline"];
+    describe("with options which include optionalProps argument", () => {
+      describe("without all argument", () => {
+        const source = "without all argument";
+        const optionalTaskProps: DandoriTaskOptionalProperty[] = ["deadline"];
 
-      beforeEach(async () => {
-        result = await generateDandoriTasks(source, {
-          filter,
+        beforeEach(async () => {
+          result = await generateDandoriTasks(source, {
+            optionalTaskProps,
+          });
+        });
+
+        it("called chat.completions.create with valid arguments", () => {
+          expect(openAI.chat.completions.create).toBeCalledWith(
+            createOpenAiChatGptArguments({
+              source,
+              filter: [...optionalTaskProps, ...requiredProperties],
+            }),
+          );
         });
       });
 
-      it("called chat.completions.create with valid arguments", () => {
-        expect(openAI.chat.completions.create).toBeCalledWith(
-          createOpenAiChatGptArguments({
-            source,
-            filter: [...filter, ...requiredProperties],
-          }),
-        );
-      });
+      describe("with all argument", () => {
+        const source = "with all argument";
+        const optionalTaskProps: OptionalAllDandoriTaskPropertiesName[] = [
+          "all",
+        ];
 
-      it("called logger.debug with valid arguments", () => {
-        expect(logger.debug).toBeCalledWith(openAiResArguments.tasks);
-      });
+        beforeEach(async () => {
+          result = await generateDandoriTasks(source, {
+            optionalTaskProps,
+          });
+        });
 
-      it("return tasks", () => {
-        expect(result).toStrictEqual(openAiResArguments.tasks);
-      });
-
-      it("called log with valid statement", () => {
-        expect(runPromisesSequentiallyMock.mock.calls[0][1]).toContain(
-          logPrefix,
-        );
+        it("called chat.completions.create with valid arguments", () => {
+          expect(openAI.chat.completions.create).toBeCalledWith(
+            createOpenAiChatGptArguments({
+              source,
+              filter: Object.keys(
+                functionCallTaskProperties,
+              ) as DandoriTaskProperty[],
+            }),
+          );
+        });
       });
     });
 
     describe("without options", () => {
-      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
       const source = "without model argument";
 
       beforeEach(async () => {
