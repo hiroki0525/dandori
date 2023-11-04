@@ -1,5 +1,10 @@
 import { mkdir, rm, rmdir, writeFile } from "fs/promises";
-import generateDandoriTasks, { DandoriTask } from "../index";
+import generateDandoriTasks, {
+  ChatGPTFunctionCallModel,
+  DandoriTaskOptionalProperty,
+  DandoriTaskProperty,
+  DandoriTaskRequiredProperty,
+} from "../index";
 import {
   describe,
   beforeEach,
@@ -184,12 +189,50 @@ describe("generateDandoriTasks", () => {
         },
       },
     } as const;
-    const requiredProperties: readonly (keyof DandoriTask)[] = [
+    const requiredProperties: readonly DandoriTaskRequiredProperty[] = [
       "id",
       "name",
       "fromTaskIdList",
     ];
     const logPrefix = "Generating tasks";
+    const createOpenAiChatGptArguments = ({
+      source,
+      model = "gpt-3.5-turbo-0613",
+      filter = Object.keys(functionCallTaskProperties) as DandoriTaskProperty[],
+    }: {
+      source: string;
+      model?: ChatGPTFunctionCallModel;
+      filter?: DandoriTaskProperty[];
+    }) => ({
+      messages: [{ role: "user", content: source }],
+      model,
+      function_call: { name: functionCallName },
+      functions: [
+        {
+          name: functionCallName,
+          description:
+            "Get the tasks flow which will be used like Gantt chart.",
+          parameters: {
+            type: "object",
+            properties: {
+              tasks: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: requiredProperties,
+                  properties: Object.fromEntries(
+                    filter.map((prop) => [
+                      prop,
+                      functionCallTaskProperties[prop],
+                    ]),
+                  ),
+                },
+              },
+            },
+          },
+        },
+      ],
+    });
 
     beforeEach(() => {
       process.env[openApiKeyPropName] = apiKey;
@@ -199,7 +242,7 @@ describe("generateDandoriTasks", () => {
       expect(process.env[openApiKeyPropName]).toBe(apiKey);
     });
 
-    describe("with model argument", () => {
+    describe("with options which include model argument", () => {
       let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
       const source = "with model argument";
       const model = "gpt-4-0613";
@@ -211,31 +254,9 @@ describe("generateDandoriTasks", () => {
       });
 
       it("called chat.completions.create with valid arguments", () => {
-        expect(openAI.chat.completions.create).toBeCalledWith({
-          messages: [{ role: "user", content: source }],
-          model,
-          function_call: { name: functionCallName },
-          functions: [
-            {
-              name: functionCallName,
-              description:
-                "Get the tasks flow which will be used like Gantt chart.",
-              parameters: {
-                type: "object",
-                properties: {
-                  tasks: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      required: requiredProperties,
-                      properties: functionCallTaskProperties,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        });
+        expect(openAI.chat.completions.create).toBeCalledWith(
+          createOpenAiChatGptArguments({ source, model }),
+        );
       });
 
       it("called logger.debug with valid arguments", () => {
@@ -253,7 +274,42 @@ describe("generateDandoriTasks", () => {
       });
     });
 
-    describe("without model argument", () => {
+    describe("with options which include filter argument", () => {
+      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
+      const source = "with filter argument";
+      const filter: DandoriTaskOptionalProperty[] = ["deadline"];
+
+      beforeEach(async () => {
+        result = await generateDandoriTasks(source, {
+          filter,
+        });
+      });
+
+      it("called chat.completions.create with valid arguments", () => {
+        expect(openAI.chat.completions.create).toBeCalledWith(
+          createOpenAiChatGptArguments({
+            source,
+            filter: [...filter, ...requiredProperties],
+          }),
+        );
+      });
+
+      it("called logger.debug with valid arguments", () => {
+        expect(logger.debug).toBeCalledWith(openAiResArguments.tasks);
+      });
+
+      it("return tasks", () => {
+        expect(result).toStrictEqual(openAiResArguments.tasks);
+      });
+
+      it("called log with valid statement", () => {
+        expect(runPromisesSequentiallyMock.mock.calls[0][1]).toContain(
+          logPrefix,
+        );
+      });
+    });
+
+    describe("without options", () => {
       let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
       const source = "without model argument";
 
@@ -262,31 +318,9 @@ describe("generateDandoriTasks", () => {
       });
 
       it("called chat.completions.create with valid arguments", () => {
-        expect(openAI.chat.completions.create).toBeCalledWith({
-          messages: [{ role: "user", content: source }],
-          model: "gpt-3.5-turbo-0613",
-          function_call: { name: functionCallName },
-          functions: [
-            {
-              name: functionCallName,
-              description:
-                "Get the tasks flow which will be used like Gantt chart.",
-              parameters: {
-                type: "object",
-                properties: {
-                  tasks: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      required: requiredProperties,
-                      properties: functionCallTaskProperties,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        });
+        expect(openAI.chat.completions.create).toBeCalledWith(
+          createOpenAiChatGptArguments({ source }),
+        );
       });
 
       it("called logger.debug with valid arguments", () => {
