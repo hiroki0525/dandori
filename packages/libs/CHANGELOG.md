@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.12
+
+### Patch Changes
+
+- [#34](https://github.com/hiroki0525/dandori/pull/34) [`7405dab`](https://github.com/hiroki0525/dandori/commit/7405dab7379c425b19a51aedcab8f89a21e2757b) Thanks [@hiroki0525](https://github.com/hiroki0525)! - refactor how to load .env file
+
 ## 0.0.11
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @dandori/ui
 
+## 0.0.12
+
+### Patch Changes
+
+- [#34](https://github.com/hiroki0525/dandori/pull/34) [`7405dab`](https://github.com/hiroki0525/dandori/commit/7405dab7379c425b19a51aedcab8f89a21e2757b) Thanks [@hiroki0525](https://github.com/hiroki0525)! - refactor how to load .env file
+
+- Updated dependencies [[`7405dab`](https://github.com/hiroki0525/dandori/commit/7405dab7379c425b19a51aedcab8f89a21e2757b), [`a3744db`](https://github.com/hiroki0525/dandori/commit/a3744dbac0b0bcc40a4e839b6eedec15c64e8304)]:
+  - @dandori/core@0.0.12
+
 ## 0.0.11
 
 ### Patch Changes
