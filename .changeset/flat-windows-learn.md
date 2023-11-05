@@ -5,4 +5,4 @@
 "@dandori/ui": patch
 ---
 
-Add tests
+refactor how to load .env file

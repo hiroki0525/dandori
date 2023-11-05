@@ -1,5 +1,18 @@
 # @dandori/core
 
+## 0.0.11
+
+### Patch Changes
+
+- [#28](https://github.com/hiroki0525/dandori/pull/28) [`fda760c`](https://github.com/hiroki0525/dandori/commit/fda760cc26fdd349b470d0d7248410ed436fb767) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add fiter option
+
+- [#24](https://github.com/hiroki0525/dandori/pull/24) [`b4afe1a`](https://github.com/hiroki0525/dandori/commit/b4afe1a1b765d3f8cb0b24dc20d35495a550520b) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add tests
+
+- [#31](https://github.com/hiroki0525/dandori/pull/31) [`9863008`](https://github.com/hiroki0525/dandori/commit/9863008896032a7fb95f366fe309481651c4d469) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Change filter option to optionalTaskProps
+
+- Updated dependencies [[`b4afe1a`](https://github.com/hiroki0525/dandori/commit/b4afe1a1b765d3f8cb0b24dc20d35495a550520b)]:
+  - @dandori/libs@0.0.11
+
 ## 0.0.10
 
 ### Patch Changes

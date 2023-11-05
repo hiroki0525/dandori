@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.11
+
+### Patch Changes
+
+- [#24](https://github.com/hiroki0525/dandori/pull/24) [`b4afe1a`](https://github.com/hiroki0525/dandori/commit/b4afe1a1b765d3f8cb0b24dc20d35495a550520b) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add tests
+
 ## 0.0.10
 
 ### Patch Changes

@@ -1,10 +1,10 @@
-import { generateDandoriFilePath } from "../index";
+import { loadFile } from "../index";
 import { describe, it, expect } from "vitest";
 
-describe("generateDandoriFilePath", () => {
+describe("loadFile", () => {
   describe("without arguments", () => {
     it("returns cwd", () => {
-      expect(generateDandoriFilePath()).toBe(process.cwd());
+      expect(loadFile()).toBe(process.cwd());
     });
   });
 
@@ -13,9 +13,7 @@ describe("generateDandoriFilePath", () => {
       const absoluteFilePath = "/path/to/file";
 
       it("returns arguments path", () => {
-        expect(generateDandoriFilePath(absoluteFilePath)).toBe(
-          absoluteFilePath,
-        );
+        expect(loadFile(absoluteFilePath)).toBe(absoluteFilePath);
       });
     });
 
@@ -24,9 +22,7 @@ describe("generateDandoriFilePath", () => {
       const relativeFilePath = `.${basePath}`;
 
       it("returns arguments path with cwd", () => {
-        expect(generateDandoriFilePath(relativeFilePath)).toBe(
-          `${process.cwd()}${basePath}`,
-        );
+        expect(loadFile(relativeFilePath)).toBe(`${process.cwd()}${basePath}`);
       });
     });
   });

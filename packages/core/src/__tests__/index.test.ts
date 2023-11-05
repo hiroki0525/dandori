@@ -1,23 +1,13 @@
-import { mkdir, rm, rmdir, writeFile } from "fs/promises";
 import generateDandoriTasks, {
   ChatGPTFunctionCallModel,
   DandoriTaskOptionalProperty,
   DandoriTaskProperty,
   DandoriTaskRequiredProperty,
+  OptionalAllDandoriTaskPropertiesName,
 } from "../index";
-import {
-  describe,
-  beforeEach,
-  beforeAll,
-  afterEach,
-  afterAll,
-  it,
-  vi,
-  expect,
-  Mock,
-} from "vitest";
+import { describe, beforeEach, afterEach, it, vi, expect, Mock } from "vitest";
 import OpenAI from "openai";
-import { logger, runPromisesSequentially } from "@dandori/libs";
+import { loadEnvFile, logger, runPromisesSequentially } from "@dandori/libs";
 
 const openAiResArguments = { tasks: [] } as const;
 vi.mock("openai", () => {
@@ -53,10 +43,12 @@ vi.mock("@dandori/libs", async () => {
     runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
       Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
     ),
+    loadEnvFile: vi.fn(),
   };
 });
 
 const runPromisesSequentiallyMock = runPromisesSequentially as Mock;
+const loadEnvFileMock = loadEnvFile as Mock;
 
 describe("generateDandoriTasks", () => {
   const openApiKeyPropName = "OPENAI_API_KEY";
@@ -72,75 +64,16 @@ describe("generateDandoriTasks", () => {
   });
 
   describe(`without ${openApiKeyPropName} environment variable`, () => {
-    describe("with valid .env file", () => {
-      describe("no envFilePath argument", () => {
-        const apiKey = "123";
-        const envFileName = ".env";
+    const envFilePath = `./dir/.env`;
 
-        beforeAll(async () => {
-          await writeFile(envFileName, `${openApiKeyPropName}=${apiKey}`);
-        });
-
-        afterAll(async () => {
-          await rm(envFileName);
-        });
-
-        beforeEach(async () => {
-          await generateDandoriTasks("test");
-        });
-
-        it(`loaded ${openApiKeyPropName}`, () => {
-          expect(process.env[openApiKeyPropName]).toBe(apiKey);
-        });
-      });
-
-      describe("envFilePath argument", () => {
-        const apiKey = "456";
-        const envFileDir = "./dir";
-        const envFilePath = `./${envFileDir}/.env`;
-
-        beforeAll(async () => {
-          await mkdir(envFileDir);
-          await writeFile(envFilePath, `${openApiKeyPropName}=${apiKey}`);
-        });
-
-        afterAll(async () => {
-          await rm(envFilePath);
-          await rmdir(envFileDir);
-        });
-
-        beforeEach(async () => {
-          await generateDandoriTasks("test", {
-            envFilePath,
-          });
-        });
-
-        it(`loaded ${openApiKeyPropName}`, () => {
-          expect(process.env[openApiKeyPropName]).toBe(apiKey);
-        });
+    beforeEach(async () => {
+      await generateDandoriTasks("test", {
+        envFilePath,
       });
     });
 
-    describe("without valid .env file", () => {
-      let resultPromise: Promise<unknown>;
-
-      beforeEach(() => {
-        resultPromise = generateDandoriTasks("test", {
-          envFilePath: "./nodir/.env",
-        });
-      });
-
-      it("throw Error", async () => {
-        await expect(resultPromise).rejects.toThrowError();
-      });
-
-      it("called error log", async () => {
-        try {
-          await resultPromise;
-        } catch (e) {
-          expect(logger.error).toBeCalled();
-        }
-      });
+    it("call loadEnvFile with envFilePath argument", () => {
+      expect(loadEnvFileMock).toBeCalledWith(envFilePath);
     });
   });
 
@@ -189,7 +122,7 @@ describe("generateDandoriTasks", () => {
         },
       },
     } as const;
-    const requiredProperties: readonly DandoriTaskRequiredProperty[] = [
+    const requiredProperties: DandoriTaskRequiredProperty[] = [
       "id",
       "name",
       "fromTaskIdList",
@@ -198,7 +131,7 @@ describe("generateDandoriTasks", () => {
     const createOpenAiChatGptArguments = ({
       source,
       model = "gpt-3.5-turbo-0613",
-      filter = Object.keys(functionCallTaskProperties) as DandoriTaskProperty[],
+      filter = requiredProperties,
     }: {
       source: string;
       model?: ChatGPTFunctionCallModel;
@@ -234,6 +167,8 @@ describe("generateDandoriTasks", () => {
       ],
     });
 
+    let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
+
     beforeEach(() => {
       process.env[openApiKeyPropName] = apiKey;
     });
@@ -243,7 +178,6 @@ describe("generateDandoriTasks", () => {
     });
 
     describe("with options which include model argument", () => {
-      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
       const source = "with model argument";
       const model = "gpt-4-0613";
 
@@ -258,59 +192,55 @@ describe("generateDandoriTasks", () => {
           createOpenAiChatGptArguments({ source, model }),
         );
       });
-
-      it("called logger.debug with valid arguments", () => {
-        expect(logger.debug).toBeCalledWith(openAiResArguments.tasks);
-      });
-
-      it("return tasks", () => {
-        expect(result).toStrictEqual(openAiResArguments.tasks);
-      });
-
-      it("called log with valid statement", () => {
-        expect(runPromisesSequentiallyMock.mock.calls[0][1]).toContain(
-          logPrefix,
-        );
-      });
     });
 
-    describe("with options which include filter argument", () => {
-      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
-      const source = "with filter argument";
-      const filter: DandoriTaskOptionalProperty[] = ["deadline"];
+    describe("with options which include optionalProps argument", () => {
+      describe("without all argument", () => {
+        const source = "without all argument";
+        const optionalTaskProps: DandoriTaskOptionalProperty[] = ["deadline"];
 
-      beforeEach(async () => {
-        result = await generateDandoriTasks(source, {
-          filter,
+        beforeEach(async () => {
+          result = await generateDandoriTasks(source, {
+            optionalTaskProps,
+          });
+        });
+
+        it("called chat.completions.create with valid arguments", () => {
+          expect(openAI.chat.completions.create).toBeCalledWith(
+            createOpenAiChatGptArguments({
+              source,
+              filter: [...optionalTaskProps, ...requiredProperties],
+            }),
+          );
         });
       });
 
-      it("called chat.completions.create with valid arguments", () => {
-        expect(openAI.chat.completions.create).toBeCalledWith(
-          createOpenAiChatGptArguments({
-            source,
-            filter: [...filter, ...requiredProperties],
-          }),
-        );
-      });
+      describe("with all argument", () => {
+        const source = "with all argument";
+        const optionalTaskProps: OptionalAllDandoriTaskPropertiesName[] = [
+          "all",
+        ];
 
-      it("called logger.debug with valid arguments", () => {
-        expect(logger.debug).toBeCalledWith(openAiResArguments.tasks);
-      });
+        beforeEach(async () => {
+          result = await generateDandoriTasks(source, {
+            optionalTaskProps,
+          });
+        });
 
-      it("return tasks", () => {
-        expect(result).toStrictEqual(openAiResArguments.tasks);
-      });
-
-      it("called log with valid statement", () => {
-        expect(runPromisesSequentiallyMock.mock.calls[0][1]).toContain(
-          logPrefix,
-        );
+        it("called chat.completions.create with valid arguments", () => {
+          expect(openAI.chat.completions.create).toBeCalledWith(
+            createOpenAiChatGptArguments({
+              source,
+              filter: Object.keys(
+                functionCallTaskProperties,
+              ) as DandoriTaskProperty[],
+            }),
+          );
+        });
       });
     });
 
     describe("without options", () => {
-      let result: Awaited<ReturnType<typeof generateDandoriTasks>>;
       const source = "without model argument";
 
       beforeEach(async () => {

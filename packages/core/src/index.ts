@@ -1,10 +1,5 @@
-import { configDotenv } from "dotenv";
 import OpenAI from "openai";
-import {
-  generateDandoriFilePath,
-  logger,
-  runPromisesSequentially,
-} from "@dandori/libs";
+import { loadEnvFile, logger, runPromisesSequentially } from "@dandori/libs";
 import { ChatCompletionMessage } from "openai/resources";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
@@ -36,10 +31,22 @@ export type DandoriTaskOptionalProperty = Exclude<
   DandoriTaskRequiredProperty
 >;
 
+export type OptionalAllDandoriTaskPropertiesName = "all";
+const optionalAllDandoriTaskPropertiesName: OptionalAllDandoriTaskPropertiesName =
+  "all";
+export type OptionalTaskPropsOption = (
+  | DandoriTaskOptionalProperty
+  | OptionalAllDandoriTaskPropertiesName
+)[];
+const notIncludeAdditionalAllPropsName = (
+  props: OptionalTaskPropsOption,
+): props is DandoriTaskOptionalProperty[] =>
+  !props.includes(optionalAllDandoriTaskPropertiesName);
+
 export type GenerateDandoriTasksOptions = {
   chatGPTModel?: ChatGPTFunctionCallModel;
   envFilePath?: string;
-  filter?: DandoriTaskOptionalProperty[];
+  optionalTaskProps?: OptionalTaskPropsOption;
 };
 
 type FunctionCallValue = {
@@ -117,22 +124,21 @@ export default async function generateDandoriTasks(
   options?: GenerateDandoriTasksOptions,
 ): Promise<DandoriTask[]> {
   if (!process.env.OPENAI_API_KEY) {
-    const loadEnvResult = configDotenv({
-      path: generateDandoriFilePath(options?.envFilePath ?? ".env"),
-    });
-    if (loadEnvResult.error) {
-      logger.error(loadEnvResult.error);
-      throw loadEnvResult.error;
-    }
+    loadEnvFile(options?.envFilePath);
   }
   const openai = new OpenAI();
   const model: ChatGPTFunctionCallModel =
     options?.chatGPTModel ?? defaultChatGPTFunctionCallModel;
-  const filterProperties = options?.filter ?? optionalProperties;
+  const optionalTaskProps = options?.optionalTaskProps ?? [];
+  const additionalProperties = notIncludeAdditionalAllPropsName(
+    optionalTaskProps,
+  )
+    ? optionalTaskProps
+    : optionalProperties;
   const filteredOptionalFunctionCallTaskProperties = Object.fromEntries(
-    filterProperties.map((filterProperty) => [
-      filterProperty,
-      optionalFunctionCallTaskProperties[filterProperty],
+    additionalProperties.map((additionalProperty) => [
+      additionalProperty,
+      optionalFunctionCallTaskProperties[additionalProperty],
     ]),
   );
   const [completion] = await runPromisesSequentially(
