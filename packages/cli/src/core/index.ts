@@ -4,10 +4,37 @@ import chalk from "chalk";
 import generateDandoriTasks, {
   ChatGPTFunctionCallModel,
   DandoriTask,
+  OptionalTaskProps,
   OptionalTaskPropsOption,
 } from "@dandori/core";
 import { readFile } from "fs/promises";
-import { loadFile } from "@dandori/libs";
+import { loadFile, logger } from "@dandori/libs";
+
+const supportedChatGPTModels: ChatGPTFunctionCallModel[] = [
+  "gpt-3.5-turbo-0613",
+  "gpt-4-0613",
+];
+
+const isSupportedChatGPTModels = (
+  model?: string,
+): model is ChatGPTFunctionCallModel | undefined =>
+  model === undefined ||
+  supportedChatGPTModels.includes(model as ChatGPTFunctionCallModel);
+
+const supportedOptionalTaskProps: OptionalTaskPropsOption = [
+  "description",
+  "deadline",
+  "assignee",
+  "all",
+];
+
+const isSupportedOptionalTaskProps = (
+  props?: string[],
+): props is OptionalTaskPropsOption | undefined =>
+  props === undefined ||
+  props.every((prop) =>
+    supportedOptionalTaskProps.includes(prop as OptionalTaskProps),
+  );
 
 export default class DandoriCoreCli {
   private inputFile: string = "";
@@ -48,15 +75,27 @@ export default class DandoriCoreCli {
     const { envFile, optionalTaskProps, model } = this.program.opts<{
       envFile?: string;
       optionalTaskProps?: string;
-      model?: ChatGPTFunctionCallModel;
+      model?: string;
     }>();
-    // TODO: Error Handling of invalid options
+    if (!isSupportedChatGPTModels(model)) {
+      const logMessage = `Unsupported model: ${model}. Supported models are ${supportedChatGPTModels.join(
+        ", ",
+      )}`;
+      logger.error(logMessage);
+      throw new Error(logMessage);
+    }
+    const inputOptionalTaskProps = optionalTaskProps?.split(",");
+    if (!isSupportedOptionalTaskProps(inputOptionalTaskProps)) {
+      const logMessage = `Unsupported optional task props: ${optionalTaskProps}. Supported optional task props are ${supportedOptionalTaskProps.join(
+        ", ",
+      )}`;
+      logger.error(logMessage);
+      throw new Error(logMessage);
+    }
     return generateDandoriTasks(source.toString(), {
       envFilePath: envFile,
       chatGPTModel: model,
-      optionalTaskProps: optionalTaskProps?.split(
-        ",",
-      ) as OptionalTaskPropsOption,
+      optionalTaskProps: inputOptionalTaskProps,
     });
   }
 }
