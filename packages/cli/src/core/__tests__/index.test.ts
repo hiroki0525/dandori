@@ -13,7 +13,9 @@ import DandoriCoreCli from "../index";
 import generateDandoriTasks, {
   ChatGPTFunctionCallModel,
   DandoriTask,
+  OptionalTaskPropsOption,
 } from "@dandori/core";
+import { logger } from "@dandori/libs";
 
 const tasks: DandoriTask[] = [
   {
@@ -31,6 +33,7 @@ vi.mock("@dandori/core", () => ({
 
 describe("DandoriCoreCli", () => {
   const mockConsole = vi.spyOn(console, "log").mockImplementation(() => {});
+  const mockLogError = vi.spyOn(logger, "error").mockImplementation(() => {});
   const inputFileName = "DandoriCoreCli.txt";
   const inputFileText = "DandoriCoreCli";
   const loadProcessArgv = (options: string[]) => {
@@ -68,18 +71,49 @@ describe("DandoriCoreCli", () => {
   });
 
   describe("with -m option", () => {
-    const model: ChatGPTFunctionCallModel = "gpt-4-0613";
+    describe("valid argument", () => {
+      const model: ChatGPTFunctionCallModel = "gpt-4-0613";
 
-    beforeEach(async () => {
-      loadProcessArgv(["-m", model]);
-      await new DandoriCoreCli().run();
+      beforeEach(async () => {
+        loadProcessArgv(["-m", model]);
+        await new DandoriCoreCli().run();
+      });
+
+      it("call generateDandoriTasks with valid model", () => {
+        expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
+          envFilePath: undefined,
+          chatGPTModel: model,
+          optionalTaskProps: undefined,
+        });
+      });
     });
 
-    it("call generateDandoriTasks with envFilePath", () => {
-      expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
-        envFilePath: undefined,
-        chatGPTModel: model,
-        optionalTaskProps: undefined,
+    describe("invalid argument", () => {
+      const model = "invalid-model";
+      const supportedChatGPTModels: ChatGPTFunctionCallModel[] = [
+        "gpt-3.5-turbo-0613",
+        "gpt-4-0613",
+      ];
+      const expectedMessage = `Unsupported model: ${model}. Supported models are ${supportedChatGPTModels.join(
+        ", ",
+      )}`;
+
+      beforeEach(() => {
+        loadProcessArgv(["-m", model]);
+      });
+
+      it("throw Error with valid message", async () => {
+        await expect(new DandoriCoreCli().run()).rejects.toThrow(
+          expectedMessage,
+        );
+      });
+
+      it("call logger.error with valid message", async () => {
+        try {
+          await new DandoriCoreCli().run();
+        } catch {
+          expect(mockLogError).toHaveBeenCalledWith(expectedMessage);
+        }
       });
     });
   });
@@ -102,18 +136,51 @@ describe("DandoriCoreCli", () => {
   });
 
   describe("with -o option", () => {
-    const optionalTaskProps = "deadline,description";
+    describe("valid argument", () => {
+      const optionalTaskProps = "deadline,description";
 
-    beforeEach(async () => {
-      loadProcessArgv(["-o", optionalTaskProps]);
-      await new DandoriCoreCli().run();
+      beforeEach(async () => {
+        loadProcessArgv(["-o", optionalTaskProps]);
+        await new DandoriCoreCli().run();
+      });
+
+      it("call generateDandoriTasks with valid optionalTaskProps", () => {
+        expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
+          envFilePath: undefined,
+          chatGPTModel: undefined,
+          optionalTaskProps: optionalTaskProps.split(","),
+        });
+      });
     });
 
-    it("call generateDandoriTasks with envFilePath", () => {
-      expect(generateDandoriTasks).toHaveBeenCalledWith(inputFileText, {
-        envFilePath: undefined,
-        chatGPTModel: undefined,
-        optionalTaskProps: optionalTaskProps.split(","),
+    describe("invalid argument", () => {
+      const optionalTaskProps = "invalid";
+      const supportedOptionalTaskProps: OptionalTaskPropsOption = [
+        "description",
+        "deadline",
+        "assignee",
+        "all",
+      ];
+      const expectedMessage = `Unsupported optional task props: ${optionalTaskProps}. Supported optional task props are ${supportedOptionalTaskProps.join(
+        ", ",
+      )}`;
+
+      beforeEach(() => {
+        loadProcessArgv(["-o", optionalTaskProps]);
+      });
+
+      it("throw Error with valid message", async () => {
+        await expect(new DandoriCoreCli().run()).rejects.toThrow(
+          expectedMessage,
+        );
+      });
+
+      it("call logger.error with valid message", async () => {
+        try {
+          await new DandoriCoreCli().run();
+        } catch {
+          expect(mockLogError).toHaveBeenCalledWith(expectedMessage);
+        }
       });
     });
   });

@@ -31,17 +31,16 @@ export type DandoriTaskOptionalProperty = Exclude<
   DandoriTaskRequiredProperty
 >;
 
-export type OptionalAllDandoriTaskPropertiesName = "all";
-const optionalAllDandoriTaskPropertiesName: OptionalAllDandoriTaskPropertiesName =
-  "all";
-export type OptionalTaskPropsOption = (
+export type DandoriTaskOptionalAllProperty = "all";
+const dandoriTaskOptionalAllProperty: DandoriTaskOptionalAllProperty = "all";
+export type OptionalTaskProps =
   | DandoriTaskOptionalProperty
-  | OptionalAllDandoriTaskPropertiesName
-)[];
+  | DandoriTaskOptionalAllProperty;
+export type OptionalTaskPropsOption = OptionalTaskProps[];
 const notIncludeAdditionalAllPropsName = (
   props: OptionalTaskPropsOption,
 ): props is DandoriTaskOptionalProperty[] =>
-  !props.includes(optionalAllDandoriTaskPropertiesName);
+  !props.includes(dandoriTaskOptionalAllProperty);
 
 export type GenerateDandoriTasksOptions = {
   chatGPTModel?: ChatGPTFunctionCallModel;

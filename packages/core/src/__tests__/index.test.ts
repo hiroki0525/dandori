@@ -3,7 +3,7 @@ import generateDandoriTasks, {
   DandoriTaskOptionalProperty,
   DandoriTaskProperty,
   DandoriTaskRequiredProperty,
-  OptionalAllDandoriTaskPropertiesName,
+  DandoriTaskOptionalAllProperty,
 } from "../index";
 import { describe, beforeEach, afterEach, it, vi, expect, Mock } from "vitest";
 import OpenAI from "openai";
@@ -217,9 +217,7 @@ describe("generateDandoriTasks", () => {
 
       describe("with all argument", () => {
         const source = "with all argument";
-        const optionalTaskProps: OptionalAllDandoriTaskPropertiesName[] = [
-          "all",
-        ];
+        const optionalTaskProps: DandoriTaskOptionalAllProperty[] = ["all"];
 
         beforeEach(async () => {
           result = await generateDandoriTasks(source, {
