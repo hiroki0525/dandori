@@ -7,7 +7,7 @@ import generateDandoriTasks, {
 } from "../index";
 import { describe, beforeEach, afterEach, it, vi, expect, Mock } from "vitest";
 import OpenAI from "openai";
-import { loadEnvFile, logger, runPromisesSequentially } from "@dandori/libs";
+import { loadEnvFile, runPromisesSequentially } from "@dandori/libs";
 
 const openAiResArguments = { tasks: [] } as const;
 vi.mock("openai", () => {
@@ -30,16 +30,18 @@ vi.mock("openai", () => {
   return { default: OpenAI };
 });
 
+const mockLogDebug = vi.fn();
+
 vi.mock("@dandori/libs", async () => {
   const actualModule =
     await vi.importActual<typeof import("@dandori/libs")>("@dandori/libs");
   return {
     ...actualModule,
-    logger: {
+    getLogger: vi.fn(() => ({
       error: vi.fn(),
-      debug: vi.fn(),
+      debug: mockLogDebug,
       info: vi.fn(),
-    },
+    })),
     runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
       Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
     ),
@@ -252,7 +254,7 @@ describe("generateDandoriTasks", () => {
       });
 
       it("called logger.debug with valid arguments", () => {
-        expect(logger.debug).toBeCalledWith(openAiResArguments.tasks);
+        expect(mockLogDebug).toBeCalledWith(openAiResArguments.tasks);
       });
 
       it("return tasks", () => {

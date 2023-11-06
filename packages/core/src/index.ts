@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { loadEnvFile, logger, runPromisesSequentially } from "@dandori/libs";
+import { getLogger, loadEnvFile, runPromisesSequentially } from "@dandori/libs";
 import { ChatCompletionMessage } from "openai/resources";
 
 export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
@@ -179,6 +179,6 @@ export default async function generateDandoriTasks(
   const resFunctionCall = completion.choices[0].message
     .function_call as ChatCompletionMessage.FunctionCall;
   const { tasks } = JSON.parse(resFunctionCall.arguments);
-  logger.debug(tasks);
+  getLogger().debug(tasks);
   return tasks as DandoriTask[];
 }

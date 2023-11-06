@@ -1,16 +1,15 @@
-import { describe, it, expect, vi, afterEach, beforeEach, Mock } from "vitest";
-import { logger } from "../logger";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { runPromisesSequentially } from "../runPromisesSequentially";
 
-vi.mock("../logger", async () => ({
-  logger: {
-    error: vi.fn(),
-    info: vi.fn(),
-  },
-}));
+const logErrorMock = vi.fn();
+const logInfoMock = vi.fn();
 
-const logErrorMock = logger.error as Mock;
-const logInfoMock = logger.info as Mock;
+vi.mock("../logger", () => ({
+  getLogger: vi.fn(() => ({
+    error: logErrorMock,
+    info: logInfoMock,
+  })),
+}));
 
 describe("runPromisesSequentially", () => {
   const msPerLog = 5000;
