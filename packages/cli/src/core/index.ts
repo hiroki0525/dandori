@@ -8,7 +8,7 @@ import generateDandoriTasks, {
   OptionalTaskPropsOption,
 } from "@dandori/core";
 import { readFile } from "fs/promises";
-import { loadFile, logger } from "@dandori/libs";
+import { getLogger, loadFile } from "@dandori/libs";
 
 const supportedChatGPTModels: ChatGPTFunctionCallModel[] = [
   "gpt-3.5-turbo-0613",
@@ -77,6 +77,7 @@ export default class DandoriCoreCli {
       optionalTaskProps?: string;
       model?: string;
     }>();
+    const logger = getLogger();
     if (!isSupportedChatGPTModels(model)) {
       const logMessage = `Unsupported model: ${model}. Supported models are ${supportedChatGPTModels.join(
         ", ",

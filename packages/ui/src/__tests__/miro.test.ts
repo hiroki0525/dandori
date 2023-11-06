@@ -1,5 +1,5 @@
 import { describe, beforeEach, afterEach, vi, Mock, it, expect } from "vitest";
-import { logger, runPromisesSequentially } from "@dandori/libs";
+import { runPromisesSequentially } from "@dandori/libs";
 import { Board } from "@mirohq/miro-api";
 import { generateDandoriMiroCards } from "../index";
 import { DandoriTask } from "@dandori/core";
@@ -18,18 +18,19 @@ vi.mock("@mirohq/miro-api", () => {
   return { MiroApi, Board };
 });
 
+const mockLogInfo = vi.fn();
+
 vi.mock("@dandori/libs", () => ({
-  logger: {
+  getLogger: vi.fn(() => ({
     debug: vi.fn(),
-    info: vi.fn(),
-  },
+    info: mockLogInfo,
+  })),
   runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
     Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
   ),
 }));
 
 const mockRunPromisesSequentially = runPromisesSequentially as Mock;
-const mockLogInfo = logger.info as Mock;
 
 describe("generateDandoriMiroCards", () => {
   let board: Board;

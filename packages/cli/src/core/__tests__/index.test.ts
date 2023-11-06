@@ -15,7 +15,6 @@ import generateDandoriTasks, {
   DandoriTask,
   OptionalTaskPropsOption,
 } from "@dandori/core";
-import { logger } from "@dandori/libs";
 
 const tasks: DandoriTask[] = [
   {
@@ -31,9 +30,21 @@ vi.mock("@dandori/core", () => ({
   default: vi.fn(() => tasks),
 }));
 
+const mockLogError = vi.fn();
+
+vi.mock("@dandori/libs", async () => {
+  const actualModule =
+    await vi.importActual<typeof import("@dandori/libs")>("@dandori/libs");
+  return {
+    ...actualModule,
+    getLogger: vi.fn(() => ({
+      error: mockLogError,
+    })),
+  };
+});
+
 describe("DandoriCoreCli", () => {
   const mockConsole = vi.spyOn(console, "log").mockImplementation(() => {});
-  const mockLogError = vi.spyOn(logger, "error").mockImplementation(() => {});
   const inputFileName = "DandoriCoreCli.txt";
   const inputFileText = "DandoriCoreCli";
   const loadProcessArgv = (options: string[]) => {

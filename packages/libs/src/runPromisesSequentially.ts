@@ -1,9 +1,10 @@
-import { logger } from "./logger";
+import { getLogger } from "./logger";
 
 export async function runPromisesSequentially<T>(
   runPromises: (() => Promise<T>)[],
   runningLogPrefix: string,
 ): Promise<T[]> {
+  const logger = getLogger();
   let currentRunPromiseCount = 0;
   const maxRunPromiseCount = runPromises.length;
   const timeId = setInterval(() => {
