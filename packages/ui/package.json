@@ -19,7 +19,8 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "dev": "tsx ./scripts/generateDandoriMiroCards.ts",
+    "dev:miro": "tsx ./scripts/generateDandoriMiroCards.ts",
+    "dev:notion": "tsx ./scripts/generateDandoriNotionPages.ts",
     "test": "vitest run"
   },
   "keywords": [],
@@ -27,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@mirohq/miro-api": "^2.0.2",
+    "@notionhq/client": "^2.2.13",
     "flat-to-nested": "^1.1.1",
     "tree-model": "^1.0.7"
   },

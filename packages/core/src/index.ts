@@ -7,6 +7,8 @@ export type ChatGPTFunctionCallModel = "gpt-3.5-turbo-0613" | "gpt-4-0613";
 const defaultChatGPTFunctionCallModel: ChatGPTFunctionCallModel =
   "gpt-3.5-turbo-0613";
 
+export type DandoriTaskStatus = "todo" | "doing" | "done";
+
 export type DandoriTask = {
   id: string;
   name: string;
@@ -16,6 +18,7 @@ export type DandoriTask = {
     id: string;
     name: string;
   };
+  status?: DandoriTaskStatus;
   fromTaskIdList: string[];
 };
 
@@ -48,7 +51,7 @@ export type GenerateDandoriTasksOptions = {
   optionalTaskProps?: OptionalTaskPropsOption;
 };
 
-type FunctionCallValue = {
+export type FunctionCallValue = {
   type: "string" | "array" | "object";
   description?: string;
   items?: FunctionCallValue;
@@ -105,6 +108,11 @@ const optionalFunctionCallTaskProperties: Record<
         description: "The task assignee name.",
       },
     },
+  },
+  status: {
+    type: "string",
+    description:
+      'The task status which value is only allowed "todo", "doing" and "done". If not provided, the default value is "todo"',
   },
 };
 
