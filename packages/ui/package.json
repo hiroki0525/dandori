@@ -20,8 +20,8 @@
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "init": "tsx init.ts",
-    "dev:miro": "tsx script/generateDandoriMiroCards.ts",
-    "dev:notion": "tsx script/generateDandoriNotionPages.ts",
+    "dev:miro": "tsx scripts/generateDandoriMiroCards.ts",
+    "dev:notion": "tsx scripts/generateDandoriNotionPages.ts",
     "test": "vitest run"
   },
   "keywords": [],
