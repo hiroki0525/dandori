@@ -4,6 +4,7 @@ import generateDandoriTasks, {
   DandoriTaskProperty,
   DandoriTaskRequiredProperty,
   DandoriTaskOptionalAllProperty,
+  FunctionCallValue,
 } from "../index";
 import { describe, beforeEach, afterEach, it, vi, expect, Mock } from "vitest";
 import OpenAI from "openai";
@@ -85,7 +86,10 @@ describe("generateDandoriTasks", () => {
     const excludePropertyPrompt =
       "If not provided, this property shouldn't be included.";
     const generateIdPrompt = "If not provided, return generated unique ID.";
-    const functionCallTaskProperties = {
+    const functionCallTaskProperties: Record<
+      DandoriTaskProperty,
+      FunctionCallValue
+    > = {
       id: {
         type: "string",
         description: `The task ID. ${generateIdPrompt}`,
@@ -122,6 +126,11 @@ describe("generateDandoriTasks", () => {
         items: {
           type: "string",
         },
+      },
+      status: {
+        type: "string",
+        description:
+          'The task status which value is only allowed "todo", "doing" and "done". If not provided, the default value is "todo"',
       },
     } as const;
     const requiredProperties: DandoriTaskRequiredProperty[] = [
