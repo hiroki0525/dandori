@@ -85,7 +85,7 @@ const createPageParams = (
   };
 };
 
-export default async function generateDandoriNotionPages(
+export async function generateDandoriNotionPages(
   tasks: DandoriTask[],
   options: GenerateDandoriNotionDatabaseItemsOptions,
 ): Promise<void> {
