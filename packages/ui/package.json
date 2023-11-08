@@ -19,8 +19,9 @@
   "type": "module",
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
-    "dev:miro": "tsx ./scripts/generateDandoriMiroCards.ts",
-    "dev:notion": "tsx ./scripts/generateDandoriNotionPages.ts",
+    "init": "tsx init.ts",
+    "dev:miro": "tsx script/generateDandoriMiroCards.ts",
+    "dev:notion": "tsx script/generateDandoriNotionPages.ts",
     "test": "vitest run"
   },
   "keywords": [],

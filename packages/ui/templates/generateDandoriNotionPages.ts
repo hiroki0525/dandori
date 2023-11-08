@@ -1,6 +1,6 @@
 import { loadEnvFile } from "@dandori/libs";
 import { tasks } from "./mock";
-import generateDandoriNotionPages from "../src/notion";
+import { generateDandoriNotionPages } from "@dandori/ui";
 
 // set environment variables like access token
 loadEnvFile();
