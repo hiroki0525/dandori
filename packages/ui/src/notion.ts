@@ -4,9 +4,8 @@ import {
   DandoriTaskRequiredProperty,
   DandoriTaskStatus,
 } from "@dandori/core";
-import { Client } from "@notionhq/client";
-import { runPromisesSequentially } from "@dandori/libs";
-import { CreatePageParameters } from "@notionhq/client/build/src/api-endpoints";
+import { Client, LogLevel } from "@notionhq/client";
+import { getLogger, runPromisesSequentially } from "@dandori/libs";
 
 type SupportNotionTaskOptionalProperty =
   | Exclude<DandoriTaskOptionalProperty, "assignee">
@@ -24,7 +23,7 @@ export type GenerateDandoriNotionDatabaseItemsOptions = {
 const createPageParams = (
   task: DandoriTask,
   options: GenerateDandoriNotionDatabaseItemsOptions,
-): CreatePageParameters => {
+): Parameters<InstanceType<typeof Client>["pages"]["create"]>[0] => {
   const propsMap = options.databasePropertiesMap;
   const { deadline, description, status, name } = task;
   const {
@@ -89,8 +88,16 @@ export async function generateDandoriNotionPages(
   tasks: DandoriTask[],
   options: GenerateDandoriNotionDatabaseItemsOptions,
 ): Promise<void> {
+  const logger = getLogger();
   const client = new Client({
     auth: process.env.NOTION_TOKEN,
+    logger: (
+      level: LogLevel,
+      message: string,
+      extraInfo: Record<string, unknown>,
+    ) => {
+      logger[level](message, extraInfo);
+    },
   });
   const createPages = tasks.map((task) => () => {
     const pageParams = createPageParams(task, options);
