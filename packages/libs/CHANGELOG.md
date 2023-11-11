@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.13
+
+### Patch Changes
+
+- [#43](https://github.com/hiroki0525/dandori/pull/43) [`52ae95f`](https://github.com/hiroki0525/dandori/commit/52ae95fc72a8fe4213f77654daeb517231b9497a) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add enable to inject custom logger
+
 ## 0.0.12
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @dandori/core
 
+## 0.0.13
+
+### Patch Changes
+
+- [#45](https://github.com/hiroki0525/dandori/pull/45) [`0180a38`](https://github.com/hiroki0525/dandori/commit/0180a38652b29bc463670a12765762c2fe403656) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add notion
+
+- [#43](https://github.com/hiroki0525/dandori/pull/43) [`52ae95f`](https://github.com/hiroki0525/dandori/commit/52ae95fc72a8fe4213f77654daeb517231b9497a) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add enable to inject custom logger
+
+- Updated dependencies [[`52ae95f`](https://github.com/hiroki0525/dandori/commit/52ae95fc72a8fe4213f77654daeb517231b9497a)]:
+  - @dandori/libs@0.0.13
+
 ## 0.0.12
 
 ### Patch Changes
