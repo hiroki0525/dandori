@@ -7,29 +7,72 @@ import {
 import { Client, LogLevel } from "@notionhq/client";
 import { getLogger, runPromisesSequentially } from "@dandori/libs";
 
-type SupportNotionTaskOptionalProperty =
-  | Exclude<DandoriTaskOptionalProperty, "assignee">
-  | `${Extract<DandoriTaskOptionalProperty, "status">}.${DandoriTaskStatus}`;
+type SupportNotionTaskOptionalProperty = Exclude<
+  DandoriTaskOptionalProperty,
+  "assignee" | "status"
+>;
 
-type DatabasePropertiesMap = {
+type BaseDatabasePropertiesMap = {
   [key in SupportNotionTaskOptionalProperty]?: string;
 } & { [key in Extract<DandoriTaskRequiredProperty, "name">]?: string };
 
+type DandoriStatusProperty = Extract<DandoriTaskOptionalProperty, "status">;
+
+type StatusDatabasePropertiesMap = Record<
+  `${DandoriStatusProperty}.${DandoriTaskStatus}` & DandoriStatusProperty,
+  string
+>;
+
+type StatusTodoDatabasePropertiesMap = StatusDatabasePropertiesMap & {
+  status: string;
+  "status.todo": string;
+  "status.doing"?: string;
+  "status.done"?: string;
+} & BaseDatabasePropertiesMap;
+
+type StatusDoingDatabasePropertiesMap = StatusDatabasePropertiesMap & {
+  status: string;
+  "status.todo"?: string;
+  "status.doing": string;
+  "status.done"?: string;
+} & BaseDatabasePropertiesMap;
+
+type StatusDoneDatabasePropertiesMap = StatusDatabasePropertiesMap & {
+  status: string;
+  "status.todo"?: string;
+  "status.doing"?: string;
+  "status.done": string;
+} & BaseDatabasePropertiesMap;
+
+type DatabasePropertiesMapWithStatus =
+  | StatusTodoDatabasePropertiesMap
+  | StatusDoingDatabasePropertiesMap
+  | StatusDoneDatabasePropertiesMap;
+
+export type DatabasePropertiesMap =
+  | BaseDatabasePropertiesMap
+  | DatabasePropertiesMapWithStatus;
+
 export type GenerateDandoriNotionDatabaseItemsOptions = {
   databaseId: string;
-  databasePropertiesMap: DatabasePropertiesMap;
+  databasePropertiesMap?: DatabasePropertiesMap;
+};
+
+const hasStatusProperty = (
+  value: DatabasePropertiesMap,
+): value is DatabasePropertiesMapWithStatus => {
+  return "status" in value;
 };
 
 const createPageParams = (
   task: DandoriTask,
   options: GenerateDandoriNotionDatabaseItemsOptions,
 ): Parameters<InstanceType<typeof Client>["pages"]["create"]>[0] => {
-  const propsMap = options.databasePropertiesMap;
+  const propsMap = options.databasePropertiesMap ?? {};
   const { deadline, description, status, name } = task;
   const {
     deadline: deadlineProp,
     description: descriptionProp,
-    status: statusProp,
     name: nameProp = "Name",
   } = propsMap;
   const pageProperties: Record<string, any> = {
@@ -66,7 +109,8 @@ const createPageParams = (
       };
     }
   }
-  if (status && statusProp) {
+  if (status && hasStatusProperty(propsMap)) {
+    const statusProp = propsMap.status;
     const statusName = propsMap[`status.${status}`];
     if (statusName) {
       pageProperties[statusProp] = {

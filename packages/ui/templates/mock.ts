@@ -1,4 +1,4 @@
-import { DandoriTask } from "@dandori/core/src";
+import { DandoriTask } from "@dandori/core";
 
 // customize tasks as you like
 export const tasks: DandoriTask[] = [
