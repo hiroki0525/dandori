@@ -94,7 +94,7 @@ describe("generateDandoriNotionPages", () => {
   };
 
   beforeAll(() => {
-    process.env.NOTION_TOKEN = "token";
+    process.env.NOTION_API_KEY = "token";
   });
 
   beforeEach(() => {

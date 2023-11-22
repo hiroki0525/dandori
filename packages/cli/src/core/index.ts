@@ -25,6 +25,7 @@ const supportedOptionalTaskProps: OptionalTaskPropsOption = [
   "description",
   "deadline",
   "assignee",
+  "status",
   "all",
 ];
 
