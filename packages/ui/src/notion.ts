@@ -86,7 +86,7 @@ const createPageParams = (
       ],
     },
   };
-  if (descriptionProp) {
+  if (description && descriptionProp) {
     pageProperties[descriptionProp] = {
       rich_text: [
         {
@@ -134,7 +134,7 @@ export async function generateDandoriNotionPages(
 ): Promise<void> {
   const logger = getLogger();
   const client = new Client({
-    auth: process.env.NOTION_TOKEN,
+    auth: process.env.NOTION_API_KEY,
     logger: (
       level: LogLevel,
       message: string,

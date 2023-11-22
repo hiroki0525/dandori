@@ -170,6 +170,7 @@ describe("DandoriCoreCli", () => {
         "description",
         "deadline",
         "assignee",
+        "status",
         "all",
       ];
       const expectedMessage = `Unsupported optional task props: ${optionalTaskProps}. Supported optional task props are ${supportedOptionalTaskProps.join(

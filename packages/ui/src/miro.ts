@@ -55,7 +55,7 @@ export async function generateDandoriMiroCards(
 ): Promise<void> {
   const logger = getLogger();
   const miroApi = new MiroApi(
-    process.env.MIRO_ACCESS_TOKEN,
+    process.env.MIRO_API_KEY,
     undefined,
     (...thing) => {
       logger.debug(thing);
