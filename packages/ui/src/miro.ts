@@ -2,7 +2,7 @@ import { MiroApi } from "@mirohq/miro-api";
 import { DandoriTask } from "@dandori/core";
 import FlatToNested from "flat-to-nested";
 import TreeModel from "tree-model";
-import { getLogger, runPromisesSequentially } from "@dandori/libs";
+import { getLogger, logLevel, runPromisesSequentially } from "@dandori/libs";
 
 export type GenerateDandoriMiroCardsOptions = {
   boardId: Parameters<MiroApi["getBoard"]>[0];
@@ -58,7 +58,7 @@ export async function generateDandoriMiroCards(
     process.env.MIRO_API_KEY,
     undefined,
     (...thing) => {
-      logger.debug(thing);
+      logger[logLevel](thing);
     },
   );
   const miroBoard = await miroApi.getBoard(options.boardId);

@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/hiroki0525/dandori.git"
   },
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "prepare": "husky install",

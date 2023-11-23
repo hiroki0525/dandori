@@ -20,15 +20,18 @@ vi.mock("@mirohq/miro-api", () => {
 
 const mockLogInfo = vi.fn();
 
-vi.mock("@dandori/libs", () => ({
-  getLogger: vi.fn(() => ({
-    debug: vi.fn(),
-    info: mockLogInfo,
-  })),
-  runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
-    Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
-  ),
-}));
+vi.mock("@dandori/libs", () => {
+  return {
+    logLevel: "info",
+    getLogger: vi.fn(() => ({
+      debug: vi.fn(),
+      info: mockLogInfo,
+    })),
+    runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
+      Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
+    ),
+  };
+});
 
 const mockRunPromisesSequentially = runPromisesSequentially as Mock;
 
