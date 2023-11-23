@@ -15,18 +15,25 @@ import { runPromisesSequentially } from "@dandori/libs";
 
 vi.mock("@notionhq/client", () => {
   const Client = vi.fn();
+  enum LogLevel {
+    DEBUG = "debug",
+    INFO = "info",
+    WARN = "warn",
+    ERROR = "error",
+  }
   Client.prototype = {
     pages: {
       create: vi.fn(),
     },
   };
-  return { Client };
+  return { Client, LogLevel };
 });
 
 vi.mock("@dandori/libs", () => {
   return {
+    logLevel: "info",
     getLogger: vi.fn(() => ({
-      debug: vi.fn(),
+      info: vi.fn(),
     })),
     runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
       Promise.all(runPromises.map((runPromise: () => any) => runPromise())),

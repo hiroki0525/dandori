@@ -33,11 +33,9 @@ vi.mock("openai", () => {
 
 const mockLogDebug = vi.fn();
 
-vi.mock("@dandori/libs", async () => {
-  const actualModule =
-    await vi.importActual<typeof import("@dandori/libs")>("@dandori/libs");
+vi.mock("@dandori/libs", () => {
   return {
-    ...actualModule,
+    logLevel: "info",
     getLogger: vi.fn(() => ({
       error: vi.fn(),
       debug: mockLogDebug,

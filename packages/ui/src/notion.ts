@@ -5,7 +5,7 @@ import {
   DandoriTaskStatus,
 } from "@dandori/core";
 import { Client, LogLevel } from "@notionhq/client";
-import { getLogger, runPromisesSequentially } from "@dandori/libs";
+import { getLogger, logLevel, runPromisesSequentially } from "@dandori/libs";
 
 type SupportNotionTaskOptionalProperty = Exclude<
   DandoriTaskOptionalProperty,
@@ -128,6 +128,19 @@ const createPageParams = (
   };
 };
 
+const getLogLevel = () => {
+  switch (logLevel) {
+    case "debug":
+      return LogLevel.DEBUG;
+    case "warn":
+      return LogLevel.WARN;
+    case "error":
+      return LogLevel.ERROR;
+    default:
+      return LogLevel.INFO;
+  }
+};
+
 export async function generateDandoriNotionPages(
   tasks: DandoriTask[],
   options: GenerateDandoriNotionDatabaseItemsOptions,
@@ -135,6 +148,7 @@ export async function generateDandoriNotionPages(
   const logger = getLogger();
   const client = new Client({
     auth: process.env.NOTION_API_KEY,
+    logLevel: getLogLevel(),
     logger: (
       level: LogLevel,
       message: string,

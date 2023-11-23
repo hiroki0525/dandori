@@ -1,44 +1,95 @@
-import { describe, expect, vi, it, beforeEach } from "vitest";
-import { getLogger, setLogger } from "../logger";
-import pino from "pino";
+import { loadEnvFile } from "../index";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  beforeEach,
+  vi,
+  afterEach,
+} from "vitest";
+import { mkdir, rm, rmdir, writeFile } from "fs/promises";
 
-const defaultLogger = pino({
-  name: "dandori",
-  level: "debug",
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-    },
-  },
-});
+const mockErrorLog = vi.fn();
 
-vi.mock("pino", () => ({
-  default: vi.fn(),
+vi.mock("../logger", () => ({
+  getLogger: vi.fn(() => ({
+    error: mockErrorLog,
+  })),
 }));
 
-describe("logger", () => {
-  describe("use default logger", () => {
-    it("get default logger", () => {
-      expect(getLogger()).toEqual(defaultLogger);
+describe("loadEnvFile", () => {
+  describe("with valid .env file", () => {
+    const openApiKeyPropName = "OPENAI_API_KEY";
+
+    afterEach(() => {
+      delete process.env[openApiKeyPropName];
+    });
+
+    describe("no filePath argument", () => {
+      const apiKey = "123";
+      const envFileName = ".env";
+
+      beforeAll(async () => {
+        await writeFile(envFileName, `${openApiKeyPropName}=${apiKey}`);
+      });
+
+      afterAll(async () => {
+        await rm(envFileName);
+      });
+
+      beforeEach(() => {
+        loadEnvFile();
+      });
+
+      it(`loaded ${openApiKeyPropName}`, () => {
+        expect(process.env[openApiKeyPropName]).toBe(apiKey);
+      });
+    });
+
+    describe("filePath argument", () => {
+      const apiKey = "456";
+      const envFileDir = "./dir";
+      const envFilePath = `./${envFileDir}/.env`;
+
+      beforeAll(async () => {
+        await mkdir(envFileDir);
+        await writeFile(envFilePath, `${openApiKeyPropName}=${apiKey}`);
+      });
+
+      afterAll(async () => {
+        await rm(envFilePath);
+        await rmdir(envFileDir);
+      });
+
+      beforeEach(() => {
+        loadEnvFile(envFilePath);
+      });
+
+      it(`loaded ${openApiKeyPropName}`, () => {
+        expect(process.env[openApiKeyPropName]).toBe(apiKey);
+      });
     });
   });
 
-  describe("use custom logger", () => {
-    const customLogger = {
-      debug: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      customProp: vi.fn(),
-    };
+  describe("without valid .env file", () => {
+    const runErrorLoadEnvFile = () => loadEnvFile("./nodir/.env");
 
-    beforeEach(() => {
-      setLogger(customLogger);
+    afterEach(() => {
+      vi.clearAllMocks();
     });
 
-    it("get custom logger", () => {
-      expect(getLogger()).toEqual(customLogger);
+    it("throw Error", async () => {
+      expect(runErrorLoadEnvFile).toThrowError();
+    });
+
+    it("called error log", async () => {
+      try {
+        runErrorLoadEnvFile();
+      } catch (e) {
+        expect(mockErrorLog).toBeCalled();
+      }
     });
   });
 });
