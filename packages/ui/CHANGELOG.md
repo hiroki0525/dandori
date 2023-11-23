@@ -1,5 +1,14 @@
 # @dandori/ui
 
+## 0.0.14
+
+### Patch Changes
+
+- [#58](https://github.com/hiroki0525/dandori/pull/58) [`4a56f51`](https://github.com/hiroki0525/dandori/commit/4a56f51ad8bca86c28e67ae9081a2f0304518715) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Add log level
+
+- Updated dependencies [[`4a56f51`](https://github.com/hiroki0525/dandori/commit/4a56f51ad8bca86c28e67ae9081a2f0304518715)]:
+  - @dandori/core@0.0.14
+
 ## 0.0.13
 
 ### Patch Changes
