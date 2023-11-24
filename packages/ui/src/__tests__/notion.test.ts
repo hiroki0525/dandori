@@ -31,7 +31,7 @@ vi.mock("@notionhq/client", () => {
 
 vi.mock("@dandori/libs", () => {
   return {
-    logLevel: "info",
+    getLogLevel: () => "info",
     getLogger: vi.fn(() => ({
       info: vi.fn(),
     })),
