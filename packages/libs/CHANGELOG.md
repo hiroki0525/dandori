@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.15
+
+### Patch Changes
+
+- [#62](https://github.com/hiroki0525/dandori/pull/62) [`76f3858`](https://github.com/hiroki0525/dandori/commit/76f3858c620f339b2a7f6d95b8aae9e63e02beb5) Thanks [@hiroki0525](https://github.com/hiroki0525)! - fix: not applicable to set log level
+
 ## 0.0.14
 
 ### Patch Changes
