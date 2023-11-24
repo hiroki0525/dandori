@@ -1,5 +1,18 @@
 # @dandori/cli
 
+## 0.0.15
+
+### Patch Changes
+
+- [#60](https://github.com/hiroki0525/dandori/pull/60) [`6388842`](https://github.com/hiroki0525/dandori/commit/6388842e2fdcfecf7391327fa92f2545d4b35b67) Thanks [@hiroki0525](https://github.com/hiroki0525)! - fix cli error
+
+- [#62](https://github.com/hiroki0525/dandori/pull/62) [`76f3858`](https://github.com/hiroki0525/dandori/commit/76f3858c620f339b2a7f6d95b8aae9e63e02beb5) Thanks [@hiroki0525](https://github.com/hiroki0525)! - fix: not applicable to set log level
+
+- Updated dependencies [[`76f3858`](https://github.com/hiroki0525/dandori/commit/76f3858c620f339b2a7f6d95b8aae9e63e02beb5)]:
+  - @dandori/core@0.0.15
+  - @dandori/libs@0.0.15
+  - @dandori/ui@0.0.15
+
 ## 0.0.14
 
 ### Patch Changes
