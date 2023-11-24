@@ -31,7 +31,7 @@ await generateDandoriMiroCards(tasks, {
 
 ## Requirements
 
-* Please see [`@dandori/core` README]('../core/README.md') before using `@dandori/ui`.
+* Please see [@dandori/core](../core/README.md) before using `@dandori/ui`.
 * `@dandori/ui` depends on external APIs. You need to set `EXTERNALAPP_API_KEY` environment variables like `MIRO_API_KEY` .
 * `@dandori/ui` supports to load `.env` file. Please create `.env` file and set environment variables.
 

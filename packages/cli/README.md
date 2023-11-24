@@ -39,7 +39,7 @@ pnpm --package=@dandori/cli dlx dandori-miro your_tasks.txt -b your_miro_board_i
 
 ## Requirements
 
-* Please see [@dandori/core]('https://github.com/hiroki0525/dandori/tree/main/packages/core') and [@dandori/ui]('https://github.com/hiroki0525/dandori/tree/main/packages/ui') before using `@dandori/cli`.
+* Please see [@dandori/core](../core/README.md) and [@dandori/ui](../ui/README.md) before using `@dandori/cli`.
 
 ## Supported External APIs
 
