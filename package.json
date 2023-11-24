@@ -2,7 +2,7 @@
   "name": "@dandori/monorepo",
   "version": "0.0.1",
   "private": true,
-  "description": "",
+  "description": "Dandori(段取り) analyzes and visualizes the dependencies of your tasks.",
   "repository": {
     "type": "git",
     "url": "https://github.com/hiroki0525/dandori.git"
