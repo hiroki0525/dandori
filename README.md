@@ -44,11 +44,11 @@ This project is monorepo. You can choose the following ways to use it.
 
 ### Use CLI
 
-Please read [`@dandori/cli` README](./packages/cli/README.md).
+Please read [@dandori/cli](./packages/cli/README.md).
 
 ### Use your own code
 
-Please read [`@dandori/core` README](./packages/core/README.md) and [`@dandori/ui` README](./packages/ui/README.md).
+Please read [@dandori/core](./packages/core/README.md) and [@dandori/ui](./packages/ui/README.md).
 
 ### License
 

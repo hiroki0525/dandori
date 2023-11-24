@@ -41,7 +41,7 @@ const mockLogError = vi.fn();
 
 vi.mock("@dandori/libs", () => {
   return {
-    logLevel: "info",
+    getLogLevel: () => "info",
     getLogger: vi.fn(() => ({
       error: mockLogError,
     })),

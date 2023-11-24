@@ -14,14 +14,18 @@ export const setLogger = (newLogger: Logger): void => {
   logger = newLogger;
 };
 
-export const logLevel = process.env.LOG_LEVEL ?? "info";
+type LogLevel = "debug" | "info" | "warn" | "error";
+
+export const getLogLevel = (): LogLevel => {
+  return process.env.LOG_LEVEL ?? "info";
+};
 
 export const getLogger = (): Logger => {
   if (!logger) {
     setLogger(
       pino({
         name: "dandori",
-        level: logLevel,
+        level: getLogLevel(),
         transport: {
           target: "pino-pretty",
           options: {
