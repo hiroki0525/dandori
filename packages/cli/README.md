@@ -25,9 +25,9 @@ Today's My Tasks
 Finally, please execute the following command.
 
 ```bash
-npx --package=@dandori/cli -- miro your_tasks.txt -b your_miro_board_id
-yarn dlx -p @dandori/cli miro your_tasks.txt -b your_miro_board_id
-pnpm --package=@dandori/cli dlx miro your_tasks.txt -b your_miro_board_id
+npx --package=@dandori/cli -- dandori:miro your_tasks.txt -b your_miro_board_id
+yarn dlx -p @dandori/cli dandori:miro your_tasks.txt -b your_miro_board_id
+pnpm --package=@dandori/cli dlx dandori:miro your_tasks.txt -b your_miro_board_id
 ```
 
 ## Requirements
@@ -41,7 +41,7 @@ pnpm --package=@dandori/cli dlx miro your_tasks.txt -b your_miro_board_id
 This command is to execute `generateDandoriTasks` of `@dandori/core`.
 
 ```bash
-% pnpm --package=@dandori/cli dlx core -h
+% pnpm --package=@dandori/cli dlx dandori:core -h
 Options:
   -V, --version                                    output the version number
   -e, --env-file <env-file>                        env file path
@@ -55,7 +55,7 @@ Options:
 This command is to execute `generateDandoriMiroCards` of `@dandori/ui`.
 
 ```bash
-% pnpm --package=@dandori/cli dlx miro -h
+% pnpm --package=@dandori/cli dlx dandori:miro -h
 
 Options:
   -V, --version                                    output the version number

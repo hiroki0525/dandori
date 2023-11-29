@@ -4,7 +4,7 @@
     "sourceMap": true,
     "target": "es2022",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "declaration": true,
     "declarationDir": "./dist/types",
