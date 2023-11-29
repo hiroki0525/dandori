@@ -1,5 +1,12 @@
 # @dandori/ui
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @dandori/core@0.0.17
+
 ## 0.0.16
 
 ### Patch Changes
