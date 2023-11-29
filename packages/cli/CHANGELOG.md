@@ -1,5 +1,11 @@
 # @dandori/cli
 
+## 0.0.18
+
+### Patch Changes
+
+- [`4e9e5052226f1f9c8daa8c8c146b1a55e0518dc4`](https://github.com/hiroki0525/dandori/commit/4e9e5052226f1f9c8daa8c8c146b1a55e0518dc4) Thanks [@hiroki0525](https://github.com/hiroki0525)! - change command
+
 ## 0.0.17
 
 ### Patch Changes
