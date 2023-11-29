@@ -4,6 +4,8 @@ This repository is responsible for executing `@dandori/*` packages.
 
 ## Usage
 
+This is an example of using Miro.
+
 First, please create `.env` file and set environment variables like below.
 
 ```text

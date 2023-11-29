@@ -53,7 +53,7 @@ export type DatabasePropertiesMap =
   | BaseDatabasePropertiesMap
   | DatabasePropertiesMapWithStatus;
 
-export type GenerateDandoriNotionDatabaseItemsOptions = {
+export type GenerateDandoriNotionPagesOptions = {
   databaseId: string;
   databasePropertiesMap?: DatabasePropertiesMap;
 };
@@ -66,7 +66,7 @@ const hasStatusProperty = (
 
 const createPageParams = (
   task: DandoriTask,
-  options: GenerateDandoriNotionDatabaseItemsOptions,
+  options: GenerateDandoriNotionPagesOptions,
 ): Parameters<InstanceType<typeof Client>["pages"]["create"]>[0] => {
   const propsMap = options.databasePropertiesMap ?? {};
   const { deadline, description, status, name } = task;
@@ -143,7 +143,7 @@ const getNotionLogLevel = () => {
 
 export async function generateDandoriNotionPages(
   tasks: DandoriTask[],
-  options: GenerateDandoriNotionDatabaseItemsOptions,
+  options: GenerateDandoriNotionPagesOptions,
 ): Promise<void> {
   const logger = getLogger();
   const client = new Client({
