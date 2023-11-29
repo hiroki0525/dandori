@@ -25,14 +25,47 @@ Today's My Tasks
 Finally, please execute the following command.
 
 ```bash
-npx --package=@dandori/cli -- dandori-miro your_tasks.txt -b your_miro_board_id
-yarn dlx -p @dandori/cli dandori-miro your_tasks.txt -b your_miro_board_id
-pnpm --package=@dandori/cli dlx dandori-miro your_tasks.txt -b your_miro_board_id
+npx --package=@dandori/cli -- miro your_tasks.txt -b your_miro_board_id
+yarn dlx -p @dandori/cli miro your_tasks.txt -b your_miro_board_id
+pnpm --package=@dandori/cli dlx miro your_tasks.txt -b your_miro_board_id
 ```
 
 ## Requirements
 
 * Please see [@dandori/core](../core/README.md) and [@dandori/ui](../ui/README.md) before using `@dandori/cli`.
+
+## Commands
+
+### core
+
+This command is to execute `generateDandoriTasks` of `@dandori/core`.
+
+```bash
+% pnpm --package=@dandori/cli dlx core -h
+Options:
+  -V, --version                                    output the version number
+  -e, --env-file <env-file>                        env file path
+  -m, --model <model>                              Chat GPT model which supports function_calling
+  -o, --optional-task-props <optional-task-props>  optional output task props which delimiter is a comma
+  -h, --help                                       display help for command
+```
+
+### miro
+
+This command is to execute `generateDandoriMiroCards` of `@dandori/ui`.
+
+```bash
+% pnpm --package=@dandori/cli dlx miro -h
+
+Options:
+  -V, --version                                    output the version number
+  -e, --env-file <env-file>                        env file path
+  -m, --model <model>                              Chat GPT model which supports function_calling
+  -o, --optional-task-props <optional-task-props>  optional output task props which delimiter is a comma
+  -a, --app-card
+  -b, --board-id <board-id>
+  -h, --help                                       display help for command
+```
 
 ## Supported External APIs
 
