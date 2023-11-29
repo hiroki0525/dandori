@@ -1,5 +1,12 @@
 # @dandori/core
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [[`62694de1de3cf786c8a75d50d5001eabdd028002`](https://github.com/hiroki0525/dandori/commit/62694de1de3cf786c8a75d50d5001eabdd028002)]:
+  - @dandori/libs@0.0.17
+
 ## 0.0.15
 
 ### Patch Changes
