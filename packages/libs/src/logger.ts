@@ -1,4 +1,4 @@
-import pino from "pino";
+import { createLogger, format, transports } from "winston";
 
 export type Logger = {
   debug: (...args: any[]) => void;
@@ -22,18 +22,20 @@ export const getLogLevel = (): LogLevel => {
 
 export const getLogger = (): Logger => {
   if (!logger) {
-    setLogger(
-      pino({
-        name: "dandori",
-        level: getLogLevel(),
-        transport: {
-          target: "pino-pretty",
-          options: {
-            colorize: true,
-          },
-        },
-      }),
-    );
+    const logger = createLogger({
+      level: getLogLevel(),
+      format: format.combine(
+        format.colorize({ all: true }),
+        format.timestamp(),
+        format.splat(),
+        format.json(),
+        format.printf((info) => {
+          return `[${info.timestamp}] ${info.level} : ${info.message}`;
+        }),
+      ),
+      transports: [new transports.Console()],
+    });
+    setLogger(logger);
   }
   return logger;
 };
