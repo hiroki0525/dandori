@@ -1,5 +1,14 @@
 # @dandori/cli
 
+## 0.0.16
+
+### Patch Changes
+
+- [#68](https://github.com/hiroki0525/dandori/pull/68) [`82cdb521a57ae58cb31c974e2667d83bd8354b82`](https://github.com/hiroki0525/dandori/commit/82cdb521a57ae58cb31c974e2667d83bd8354b82) Thanks [@hiroki0525](https://github.com/hiroki0525)! - change command and types
+
+- Updated dependencies [[`82cdb521a57ae58cb31c974e2667d83bd8354b82`](https://github.com/hiroki0525/dandori/commit/82cdb521a57ae58cb31c974e2667d83bd8354b82)]:
+  - @dandori/ui@0.0.16
+
 ## 0.0.15
 
 ### Patch Changes
