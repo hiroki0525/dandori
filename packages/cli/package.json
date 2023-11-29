@@ -24,8 +24,8 @@
     "dev:miro": "tsx src/miro/cli.ts"
   },
   "bin": {
-    "dandori": "./dist/core/cli.js",
-    "dandori-miro": "./dist/miro/cli.js"
+    "core": "./dist/core/cli.js",
+    "miro": "./dist/miro/cli.js"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",
