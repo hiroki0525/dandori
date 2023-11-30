@@ -34,9 +34,14 @@ pnpm --package=@dandori/cli dlx dandori-miro your_tasks.txt -b your_miro_board_i
 
 * Please see [@dandori/core](../core/README.md) and [@dandori/ui](../ui/README.md) before using `@dandori/cli`.
 
+## Supported External APIs
+
+* [Miro](https://miro.com/)
+* [Notion](https://www.notion.so/)
+
 ## Commands
 
-### core
+### dandori-core
 
 This command is to execute `generateDandoriTasks` of `@dandori/core`.
 
@@ -50,23 +55,63 @@ Options:
   -h, --help                                       display help for command
 ```
 
-### miro
+#### Example of the command
+
+```bash
+pnpm --package=@dandori/cli dlx dandori-core your_tasks.txt > result.json
+```
+
+### dandori-miro
 
 This command is to execute `generateDandoriMiroCards` of `@dandori/ui`.
 
 ```bash
 % pnpm --package=@dandori/cli dlx dandori-miro -h
 
+Usage: @dandori/cli <input-file> [options]
+
 Options:
   -V, --version                                    output the version number
   -e, --env-file <env-file>                        env file path
   -m, --model <model>                              Chat GPT model which supports function_calling
   -o, --optional-task-props <optional-task-props>  optional output task props which delimiter is a comma
-  -a, --app-card
-  -b, --board-id <board-id>
+  -a, --app-card                                   use app card
+  -b, --board-id <board-id>                        miro board id
   -h, --help                                       display help for command
 ```
 
-## Supported External APIs
+#### Example of the command
 
-* [Miro](https://miro.com/)
+```bash
+pnpm --package=@dandori/cli dlx dandori-miro your_tasks.txt -b your_miro_board_id
+```
+
+### dandori-notion
+
+This command is to execute `generateDandoriNotionPages` of `@dandori/ui`.
+
+```bash
+% pnpm --package=@dandori/cli dlx dandori-notion -h                                      
+
+Usage: @dandori/cli <input-file> [options]
+
+Options:
+  -V, --version                                    output the version number
+  -e, --env-file <env-file>                        env file path
+  -m, --model <model>                              Chat GPT model which supports function_calling
+  -o, --optional-task-props <optional-task-props>  optional output task props which delimiter is a comma
+  -d, --database-id <database-id>                  notion database id
+  --name <name>                                    notion page name property
+  --deadline <deadline>                            notion page deadline property
+  --status <status>                                notion page status property
+  --status-todo <status-todo>                      notion page status todo property
+  --status-doing <status-doing>                    notion page status doing property
+  --status-done <status-done>                      notion page status done property
+  -h, --help                                       display help for command
+```
+
+#### Example of the command
+
+```bash
+pnpm --package=@dandori/cli dlx dandori-miro your_tasks.txt -d your_database_id -o status --status 'Status' --status-todo 'ToDo' --status-doing 'Doing' --status-done 'Done 🙌'
+```
