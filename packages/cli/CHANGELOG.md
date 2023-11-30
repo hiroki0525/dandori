@@ -1,5 +1,11 @@
 # @dandori/cli
 
+## 0.0.19
+
+### Patch Changes
+
+- [#75](https://github.com/hiroki0525/dandori/pull/75) [`7f13f60c25d28e7d3d5dc806ee403c3d3e9956a8`](https://github.com/hiroki0525/dandori/commit/7f13f60c25d28e7d3d5dc806ee403c3d3e9956a8) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add notion cli
+
 ## 0.0.18
 
 ### Patch Changes
