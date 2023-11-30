@@ -42,13 +42,13 @@ Today's My Tasks
 
 This project is monorepo. You can choose the following ways to use it.
 
-### Use CLI
-
-Please read [@dandori/cli](./packages/cli/README.md).
-
 ### Use your own code
 
 Please read [@dandori/core](./packages/core/README.md) and [@dandori/ui](./packages/ui/README.md).
+
+### Use CLI
+
+Please read [@dandori/cli](./packages/cli/README.md).
 
 ### License
 
