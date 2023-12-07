@@ -1,5 +1,14 @@
 # @dandori/ui
 
+## 0.0.20
+
+### Patch Changes
+
+- [#83](https://github.com/hiroki0525/dandori/pull/83) [`8382004`](https://github.com/hiroki0525/dandori/commit/838200449208931c43e6384ca9ccb5d58c73cb3b) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add support cjs
+
+- Updated dependencies [[`8382004`](https://github.com/hiroki0525/dandori/commit/838200449208931c43e6384ca9ccb5d58c73cb3b)]:
+  - @dandori/core@0.0.20
+
 ## 0.0.17
 
 ### Patch Changes
