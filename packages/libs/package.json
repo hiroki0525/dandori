@@ -14,9 +14,22 @@
   "publishConfig": {
     "access": "public"
   },
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": {
+        "require": "./dist/index.d.cts",
+        "default": "./dist/index.d.ts"
+      },
+      "default": {
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      }
+    }
+  },
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "dev": "tsx ./src/index.ts",

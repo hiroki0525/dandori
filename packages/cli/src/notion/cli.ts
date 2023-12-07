@@ -3,4 +3,4 @@
 import DandoriNotionCli from "./index";
 
 const cli = new DandoriNotionCli();
-await cli.run();
+void cli.run();
