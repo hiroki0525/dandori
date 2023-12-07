@@ -3,4 +3,4 @@
 import DandoriMiroCli from "./index";
 
 const cli = new DandoriMiroCli();
-await cli.run();
+void cli.run();

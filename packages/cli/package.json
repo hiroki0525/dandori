@@ -16,7 +16,11 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
+  "module": "dist/esm/index.js",
+  "exports": {
+    "require": "./dist/index.js",
+    "default": "./dist/esm/index.js"
+  },
   "scripts": {
     "build": "tsup --config ../../tsup.config.ts",
     "test": "vitest run",

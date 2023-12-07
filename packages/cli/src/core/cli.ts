@@ -3,4 +3,4 @@
 import DandoriCoreCli from "./index";
 
 const cli = new DandoriCoreCli();
-await cli.run();
+void cli.run();
