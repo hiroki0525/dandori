@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.21
+
+### Patch Changes
+
+- [#85](https://github.com/hiroki0525/dandori/pull/85) [`c4fff7f`](https://github.com/hiroki0525/dandori/commit/c4fff7f26480499dfd3806b15af378e8509353ef) Thanks [@hiroki0525](https://github.com/hiroki0525)! - add inject api key option
+
 ## 0.0.20
 
 ### Patch Changes
