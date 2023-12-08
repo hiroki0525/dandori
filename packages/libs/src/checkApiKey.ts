@@ -1,7 +1,7 @@
 export function checkApiKey(
   keyName: string,
   targetKey?: string,
-  alternativeKey?: string,
+  alternativeKey?: string | undefined | null,
 ): string {
   if (targetKey) {
     return targetKey;

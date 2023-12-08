@@ -61,7 +61,7 @@ export type DatabasePropertiesMap =
 export type GenerateDandoriNotionPagesOptions = {
   databaseId: string;
   databasePropertiesMap?: DatabasePropertiesMap;
-  apiKey?: string;
+  apiKey?: Parameters<typeof checkApiKey>[2];
 };
 
 const hasStatusProperty = (

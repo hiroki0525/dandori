@@ -12,7 +12,7 @@ import {
 export type GenerateDandoriMiroCardsOptions = {
   boardId: Parameters<MiroApi["getBoard"]>[0];
   isAppCard?: boolean;
-  apiKey?: string;
+  apiKey?: Parameters<typeof checkApiKey>[2];
 };
 
 // miro settings
