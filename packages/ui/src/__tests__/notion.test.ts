@@ -38,6 +38,7 @@ vi.mock("@dandori/libs", () => {
     runPromisesSequentially: vi.fn((runPromises, _runningLogPrefix) =>
       Promise.all(runPromises.map((runPromise: () => any) => runPromise())),
     ),
+    checkApiKey: vi.fn(),
   };
 });
 

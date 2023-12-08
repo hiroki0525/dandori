@@ -5,7 +5,12 @@ import {
   DandoriTaskStatus,
 } from "@dandori/core";
 import { Client, LogLevel } from "@notionhq/client";
-import { getLogger, getLogLevel, runPromisesSequentially } from "@dandori/libs";
+import {
+  checkApiKey,
+  getLogger,
+  getLogLevel,
+  runPromisesSequentially,
+} from "@dandori/libs";
 
 type SupportNotionTaskOptionalProperty = Exclude<
   DandoriTaskOptionalProperty,
@@ -56,6 +61,7 @@ export type DatabasePropertiesMap =
 export type GenerateDandoriNotionPagesOptions = {
   databaseId: string;
   databasePropertiesMap?: DatabasePropertiesMap;
+  apiKey?: string;
 };
 
 const hasStatusProperty = (
@@ -145,9 +151,14 @@ export async function generateDandoriNotionPages(
   tasks: DandoriTask[],
   options: GenerateDandoriNotionPagesOptions,
 ): Promise<void> {
+  const key = checkApiKey(
+    "notion api key",
+    process.env.NOTION_API_KEY,
+    options.apiKey,
+  );
   const logger = getLogger();
   const client = new Client({
-    auth: process.env.NOTION_API_KEY,
+    auth: key,
     logLevel: getNotionLogLevel(),
     logger: (
       level: LogLevel,
