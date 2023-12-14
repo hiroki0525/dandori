@@ -12,7 +12,7 @@ import {
 export type GenerateDandoriMiroCardsOptions = {
   boardId: Parameters<MiroApi["getBoard"]>[0];
   isAppCard?: boolean;
-  apiKey?: string;
+  apiKey?: Parameters<typeof checkApiKey>[2];
 };
 
 // miro settings
@@ -66,7 +66,12 @@ export async function generateDandoriMiroCards(
   );
   const logger = getLogger();
   const miroApi = new MiroApi(key, undefined, (...thing) => {
-    logger[getLogLevel()](thing);
+    // miro api sdk has no log level setting, so dandori only log debug level.
+    // https://github.com/miroapp/api-clients/blob/main/packages/miro-api/api/apis.ts#L4905-L4926
+    const logLevel = getLogLevel();
+    if (logLevel === "debug") {
+      logger[logLevel](thing);
+    }
   });
   const miroBoard = await miroApi.getBoard(options.boardId);
   const taskFlat: (DandoriTask & { [taskParentPropName]?: string })[] = tasks
