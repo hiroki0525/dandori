@@ -1,5 +1,14 @@
 # @dandori/ui
 
+## 0.0.22
+
+### Patch Changes
+
+- [#87](https://github.com/hiroki0525/dandori/pull/87) [`d3a1cfc`](https://github.com/hiroki0525/dandori/commit/d3a1cfc766544457de9c6d65c045b0657f27b7e5) Thanks [@hiroki0525](https://github.com/hiroki0525)! - fix miro log
+
+- Updated dependencies []:
+  - @dandori/core@0.0.22
+
 ## 0.0.21
 
 ### Patch Changes
