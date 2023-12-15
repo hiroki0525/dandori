@@ -14,7 +14,7 @@ export const setLogger = (newLogger: Logger): void => {
   logger = newLogger;
 };
 
-type LogLevel = "debug" | "info" | "warn" | "error";
+export type LogLevel = typeof process.env.LOG_LEVEL;
 
 export const getLogLevel = (): LogLevel => {
   return process.env.LOG_LEVEL ?? "info";
