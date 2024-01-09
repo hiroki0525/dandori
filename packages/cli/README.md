@@ -76,7 +76,7 @@ Options:
   -m, --model <model>                              Chat GPT model which supports function_calling
   -o, --optional-task-props <optional-task-props>  optional output task props which delimiter is a comma
   -a, --app-card                                   use app card
-  -b, --board-id <board-id>                        miro board id
+  -b, --board-id <board-id>                        miro board id. if not set, create new board
   -h, --help                                       display help for command
 ```
 

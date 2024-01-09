@@ -40,6 +40,6 @@
   "license": "MIT",
   "dependencies": {
     "@dandori/libs": "workspace:*",
-    "openai": "^4.20.1"
+    "openai": "^4.24.1"
   }
 }
