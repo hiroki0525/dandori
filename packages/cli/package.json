@@ -34,7 +34,7 @@
     "build": "tsup --config ../../tsup.config.ts",
     "test": "vitest run",
     "dev:core": "tsx src/core/cli.ts",
-    "dev:miro": "tsx src/miro/cli.ts",
+    "dev:miro": "tsx src/miro/cli.ts ./tmp/tmp.txt",
     "dev:notion": "tsx src/notion/cli.ts"
   },
   "bin": {

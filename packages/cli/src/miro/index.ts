@@ -15,6 +15,9 @@ export default class DandoriMiroCli extends DandoriCoreCli {
     return super
       .buildCommand()
       .option("-a, --app-card", "use app card")
-      .option("-b, --board-id <board-id>", "miro board id");
+      .option(
+        "-b, --board-id <board-id>",
+        "miro board id. if not set, create new board",
+      );
   }
 }

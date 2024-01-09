@@ -10,10 +10,12 @@ import {
 } from "@dandori/libs";
 
 export type GenerateDandoriMiroCardsOptions = {
-  boardId: Parameters<MiroApi["getBoard"]>[0];
+  boardId?: Parameters<MiroApi["getBoard"]>[0];
   isAppCard?: boolean;
   apiKey?: Parameters<typeof checkApiKey>[2];
 };
+
+export type GenerateDandoriMiroCardsResult = ReturnType<MiroApi["getBoard"]>;
 
 // miro settings
 const defaultCardMarginX = 130;
@@ -57,12 +59,12 @@ function iterateBreadthNodes<T>(
 
 export async function generateDandoriMiroCards(
   tasks: DandoriTask[],
-  options: GenerateDandoriMiroCardsOptions,
-): Promise<void> {
+  options?: GenerateDandoriMiroCardsOptions,
+): Promise<GenerateDandoriMiroCardsResult> {
   const key = checkApiKey(
     "miro api key",
     process.env.MIRO_API_KEY,
-    options.apiKey,
+    options?.apiKey,
   );
   const logger = getLogger();
   const miroApi = new MiroApi(key, undefined, (...thing) => {
@@ -73,7 +75,9 @@ export async function generateDandoriMiroCards(
       logger[logLevel](thing);
     }
   });
-  const miroBoard = await miroApi.getBoard(options.boardId);
+  const miroBoard = options?.boardId
+    ? await miroApi.getBoard(options.boardId)
+    : await miroApi.createBoard(undefined);
   const taskFlat: (DandoriTask & { [taskParentPropName]?: string })[] = tasks
     .map((task) =>
       task.fromTaskIdList.length === 0
@@ -187,4 +191,5 @@ export async function generateDandoriMiroCards(
     "Creating connectors",
   );
   logger.info("Create miro cards and connectors successfully!");
+  return miroBoard;
 }
