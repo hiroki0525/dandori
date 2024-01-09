@@ -1,5 +1,11 @@
 # @dandori/core
 
+## 0.0.23
+
+### Patch Changes
+
+- [#95](https://github.com/hiroki0525/dandori/pull/95) [`b4add76`](https://github.com/hiroki0525/dandori/commit/b4add765a51d7c479b47744fa96daee6ea6a6d17) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Create miro board
+
 ## 0.0.22
 
 ### Patch Changes
