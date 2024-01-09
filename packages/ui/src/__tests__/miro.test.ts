@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, vi, Mock, it, expect } from "vitest";
 import { runPromisesSequentially } from "@dandori/libs";
-import { Board } from "@mirohq/miro-api";
+import { Board, MiroApi } from "@mirohq/miro-api";
 import { generateDandoriMiroCards } from "../index";
 import { DandoriTask } from "@dandori/core";
 
@@ -14,6 +14,7 @@ vi.mock("@mirohq/miro-api", () => {
   };
   MiroApi.prototype = {
     getBoard: vi.fn(() => new Board()),
+    createBoard: vi.fn(() => new Board()),
   };
   return { MiroApi, Board };
 });
@@ -38,6 +39,7 @@ const mockRunPromisesSequentially = runPromisesSequentially as Mock;
 
 describe("generateDandoriMiroCards", () => {
   let board: Board;
+  let miroApi: MiroApi;
 
   const defaultCardMarginX = 130;
   const defaultCardMarginY = defaultCardMarginX / 2;
@@ -204,6 +206,7 @@ describe("generateDandoriMiroCards", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     board = new Board();
+    miroApi = new MiroApi("test");
   });
 
   afterEach(() => {
@@ -211,40 +214,56 @@ describe("generateDandoriMiroCards", () => {
   });
 
   describe("card", () => {
-    beforeEach(async () => {
-      await generateDandoriMiroCards(tasks, {
-        boardId: "boardId",
+    describe("with boardId", () => {
+      beforeEach(async () => {
+        await generateDandoriMiroCards(tasks, {
+          boardId: "boardId",
+        });
+      });
+
+      it("getBoard called", () => {
+        expect(miroApi.getBoard as Mock).toHaveBeenCalled();
+      });
+
+      it("createCardItem called", () => {
+        expect((board.createCardItem as Mock).mock.calls.flat()).toEqual(
+          expect.arrayContaining(cardParams),
+        );
+      });
+
+      it("createConnector called", () => {
+        expect((board.createConnector as Mock).mock.calls.flat()).toStrictEqual(
+          expect.arrayContaining(connectorParams),
+        );
+      });
+
+      it("runPromisesSequentially called with creating cards log", () => {
+        expect(mockRunPromisesSequentially.mock.calls[0][1]).toBe(
+          "Creating cards",
+        );
+      });
+
+      it("runPromisesSequentially called with creating connectors log", () => {
+        expect(mockRunPromisesSequentially.mock.calls[1][1]).toBe(
+          "Creating connectors",
+        );
+      });
+
+      it("called log info", () => {
+        expect(mockLogInfo.mock.lastCall[0]).toBe(
+          "Create miro cards and connectors successfully!",
+        );
       });
     });
 
-    it("createCardItem called", () => {
-      expect((board.createCardItem as Mock).mock.calls.flat()).toEqual(
-        expect.arrayContaining(cardParams),
-      );
-    });
+    describe("without boardId", () => {
+      beforeEach(async () => {
+        await generateDandoriMiroCards(tasks);
+      });
 
-    it("createConnector called", () => {
-      expect((board.createConnector as Mock).mock.calls.flat()).toStrictEqual(
-        expect.arrayContaining(connectorParams),
-      );
-    });
-
-    it("runPromisesSequentially called with creating cards log", () => {
-      expect(mockRunPromisesSequentially.mock.calls[0][1]).toBe(
-        "Creating cards",
-      );
-    });
-
-    it("runPromisesSequentially called with creating connectors log", () => {
-      expect(mockRunPromisesSequentially.mock.calls[1][1]).toBe(
-        "Creating connectors",
-      );
-    });
-
-    it("called log info", () => {
-      expect(mockLogInfo.mock.lastCall[0]).toBe(
-        "Create miro cards and connectors successfully!",
-      );
+      it("createBoard called", () => {
+        expect(miroApi.createBoard as Mock).toHaveBeenCalled();
+      });
     });
   });
 });
