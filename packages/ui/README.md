@@ -91,9 +91,7 @@ If you set `true` , the cards are created as [App cards](https://developers.miro
 
 The api key of miro. You can also set `MIRO_API_KEY` environment variable instead of this option.
 
-```ts
-
-### generateDandoriNotionTasks
+### generateDandoriNotionPages
 
 ```ts
 async function generateDandoriNotionPages(
