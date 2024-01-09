@@ -221,10 +221,6 @@ describe("generateDandoriMiroCards", () => {
         });
       });
 
-      it("getBoard called", () => {
-        expect(miroApi.getBoard as Mock).toHaveBeenCalled();
-      });
-
       it("createCardItem called", () => {
         expect((board.createCardItem as Mock).mock.calls.flat()).toEqual(
           expect.arrayContaining(cardParams),
@@ -253,6 +249,10 @@ describe("generateDandoriMiroCards", () => {
         expect(mockLogInfo.mock.lastCall[0]).toBe(
           "Create miro cards and connectors successfully!",
         );
+      });
+
+      it("getBoard called", () => {
+        expect(miroApi.getBoard as Mock).toHaveBeenCalled();
       });
     });
 
