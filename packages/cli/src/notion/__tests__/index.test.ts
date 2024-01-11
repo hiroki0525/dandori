@@ -64,7 +64,7 @@ describe("DandoriNotionCli", () => {
     });
 
     it("call generateDandoriNotionPages with database id", () => {
-      expect(mockGenerateDandoriNotionPages.mock.lastCall[1]).toContain({
+      expect(mockGenerateDandoriNotionPages.mock.lastCall[1]).toMatchObject({
         databaseId,
       });
     });
@@ -81,7 +81,7 @@ describe("DandoriNotionCli", () => {
     it("call generateDandoriNotionPages with databasePropertiesMap.name", () => {
       expect(
         mockGenerateDandoriNotionPages.mock.lastCall[1].databasePropertiesMap,
-      ).toContain({
+      ).toMatchObject({
         name,
       });
     });
@@ -98,7 +98,7 @@ describe("DandoriNotionCli", () => {
     it("call generateDandoriNotionPages with databasePropertiesMap.deadline", () => {
       expect(
         mockGenerateDandoriNotionPages.mock.lastCall[1].databasePropertiesMap,
-      ).toContain({
+      ).toMatchObject({
         deadline,
       });
     });
@@ -115,7 +115,7 @@ describe("DandoriNotionCli", () => {
     it("call generateDandoriNotionPages with databasePropertiesMap.status", () => {
       expect(
         mockGenerateDandoriNotionPages.mock.lastCall[1].databasePropertiesMap,
-      ).toContain({
+      ).toMatchObject({
         status,
       });
     });
@@ -132,7 +132,7 @@ describe("DandoriNotionCli", () => {
     it("call generateDandoriNotionPages with databasePropertiesMap.status.todo", () => {
       expect(
         mockGenerateDandoriNotionPages.mock.lastCall[1].databasePropertiesMap,
-      ).toContain({
+      ).toMatchObject({
         "status.todo": statusTodo,
       });
     });
@@ -149,7 +149,7 @@ describe("DandoriNotionCli", () => {
     it("call generateDandoriNotionPages with databasePropertiesMap.status.doing", () => {
       expect(
         mockGenerateDandoriNotionPages.mock.lastCall[1].databasePropertiesMap,
-      ).toContain({
+      ).toMatchObject({
         "status.doing": statusDoing,
       });
     });
@@ -166,7 +166,7 @@ describe("DandoriNotionCli", () => {
     it("call generateDandoriNotionPages with databasePropertiesMap.status.done", () => {
       expect(
         mockGenerateDandoriNotionPages.mock.lastCall[1].databasePropertiesMap,
-      ).toContain({
+      ).toMatchObject({
         "status.done": statusDone,
       });
     });
