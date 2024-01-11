@@ -16,13 +16,6 @@ import generateDandoriTasks, {
   OptionalTaskPropsOption,
 } from "@dandori/core";
 
-const { actualLoadFile } = await vi.hoisted(async () => {
-  const actualModule = await import("@dandori/libs");
-  return {
-    actualLoadFile: actualModule.loadFile,
-  };
-});
-
 const tasks: DandoriTask[] = [
   {
     id: "1",
@@ -39,13 +32,14 @@ vi.mock("@dandori/core", () => ({
 
 const mockLogError = vi.fn();
 
-vi.mock("@dandori/libs", () => {
+vi.mock("@dandori/libs", async (importOriginal) => {
+  const actualModule = await importOriginal<typeof import("@dandori/libs")>();
   return {
+    ...actualModule,
     getLogLevel: () => "info",
     getLogger: vi.fn(() => ({
       error: mockLogError,
     })),
-    loadFile: actualLoadFile,
   };
 });
 
