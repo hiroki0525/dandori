@@ -115,3 +115,30 @@ Options:
 ```bash
 pnpm --package=@dandori/cli dlx dandori-miro your_tasks.txt -d your_database_id -o status --status 'Status' --status-todo 'ToDo' --status-doing 'Doing' --status-done 'Done 🙌'
 ```
+
+### dandori-trello
+
+This command is to execute `generateDandoriTrelloCards` of `@dandori/ui`.
+
+```bash
+% pnpm --package=@dandori/cli dlx dandori-trello -h                                      
+
+Usage: @dandori/cli <input-file> [options]
+
+Options:
+  -V, --version                                    output the version number
+  -e, --env-file <env-file>                        env file path
+  -m, --model <model>                              Chat GPT model which supports function_calling
+  -o, --optional-task-props <optional-task-props>  optional output task props which delimiter is a comma
+  -b, --board-id <board-id>                        trello board id
+  --status-todo <status-todo>                      trello list status todo name
+  --status-doing <status-doing>                    trello list status doing name
+  --status-done <status-done>                      trello list status done name
+  -h, --help                                       display help for command
+```
+
+#### Example of the command
+
+```bash
+pnpm --package=@dandori/cli dlx dandori-trello your_tasks.txt -d your_board_id -o status --status-todo 'Todo' --status-doing 'Doing' --status-done 'Done'
+```

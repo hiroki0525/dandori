@@ -38,6 +38,21 @@ Today's My Tasks
 
 <img src="./media/notion_example.png" alt="notion output example" width="426">
 
+## Example 3
+
+### Input
+
+```text
+Today's My Tasks
+* [todo] Send Email to John
+* [doing] Write a blog
+* [done] Report to Boss
+```
+
+### Output（Trello）
+
+<img src="./media/trello_example.png" alt="notion output example" width="426">
+
 ## Usage
 
 This project is monorepo. You can choose the following ways to use it.
