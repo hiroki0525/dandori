@@ -22,18 +22,20 @@ export class TrelloClient {
     this.apiToken = apiToken;
   }
 
-  getLists(boardId: string): Promise<ListResponse[]> {
-    return fetch(
+  async getLists(boardId: string): Promise<ListResponse[]> {
+    const res = await fetch(
       `https://api.trello.com/1/boards/${boardId}/lists?key=${this.apiKey}&token=${this.apiToken}`,
-    ).then((res) => res.json());
+    );
+    return res.json();
   }
 
-  createCard(param: { listId: string; name: string }): Promise<void> {
-    return fetch(
+  async createCard(param: { listId: string; name: string }): Promise<void> {
+    const res = await fetch(
       `https://api.trello.com/1/cards?key=${this.apiKey}&token=${this.apiToken}&idList=${param.listId}&name=${param.name}`,
       {
         method: "POST",
       },
-    ).then((res) => res.json());
+    );
+    return res.json();
   }
 }

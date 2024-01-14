@@ -11,7 +11,7 @@ import {
 } from "vitest";
 import { DandoriTask } from "@dandori/core";
 import { generateDandoriNotionPages } from "@dandori/ui";
-import DandoriMiroCli from "../index";
+import DandoriNotionCli from "../index";
 import { rm, writeFile } from "fs/promises";
 
 const tasks: DandoriTask[] = [
@@ -60,7 +60,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["-d", databaseId]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with database id", () => {
@@ -75,7 +75,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["--name", name]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with databasePropertiesMap.name", () => {
@@ -92,7 +92,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["--deadline", deadline]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with databasePropertiesMap.deadline", () => {
@@ -109,7 +109,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["--status", status]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with databasePropertiesMap.status", () => {
@@ -126,7 +126,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["--status-todo", statusTodo]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with databasePropertiesMap.status.todo", () => {
@@ -143,7 +143,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["--status-doing", statusDoing]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with databasePropertiesMap.status.doing", () => {
@@ -160,7 +160,7 @@ describe("DandoriNotionCli", () => {
 
     beforeEach(async () => {
       loadProcessArgv(["--status-done", statusDone]);
-      await new DandoriMiroCli().run();
+      await new DandoriNotionCli().run();
     });
 
     it("call generateDandoriNotionPages with databasePropertiesMap.status.done", () => {

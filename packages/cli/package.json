@@ -34,13 +34,15 @@
     "build": "tsup --config ../../tsup.config.ts",
     "test": "vitest run",
     "dev:core": "tsx src/core/cli.ts",
-    "dev:miro": "tsx src/miro/cli.ts ./tmp/tmp.txt",
-    "dev:notion": "tsx src/notion/cli.ts"
+    "dev:miro": "tsx src/miro/cli.ts",
+    "dev:notion": "tsx src/notion/cli.ts",
+    "dev:trello": "tsx src/trello/cli.ts -h"
   },
   "bin": {
     "dandori-core": "./dist/core/cli.js",
     "dandori-miro": "./dist/miro/cli.js",
-    "dandori-notion": "./dist/notion/cli.js"
+    "dandori-notion": "./dist/notion/cli.js",
+    "dandori-trello": "./dist/trello/cli.js"
   },
   "keywords": [],
   "author": "Hiroki Miyaji",
