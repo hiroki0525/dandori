@@ -35,6 +35,7 @@
     "init": "tsx init.ts",
     "dev:miro": "tsx scripts/generateDandoriMiroCards.ts",
     "dev:notion": "tsx scripts/generateDandoriNotionPages.ts",
+    "dev:trello": "tsx scripts/generateDandoriTrelloCards.ts",
     "test": "vitest run"
   },
   "keywords": [],
