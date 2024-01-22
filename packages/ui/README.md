@@ -131,7 +131,7 @@ For example, if the url is `https://www.notion.so/myworkspace/1234567890?v=123`,
 
 * databasePropertiesMap
 
-**default is `{ name: 'Name' }`**
+**default is `{ name: 'title' }`**
 
 The map which key is defined by dandori and value is your notion database properties.
 

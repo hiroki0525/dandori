@@ -71,7 +71,7 @@ describe("DandoriNotionCli", () => {
   });
 
   describe("with --name option", () => {
-    const name = "Name";
+    const name = "title";
 
     beforeEach(async () => {
       loadProcessArgv(["--name", name]);

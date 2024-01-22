@@ -92,7 +92,7 @@ describe("generateDandoriNotionPages", () => {
 
   const findPagePropertiesMockParam = (
     taskName: string,
-    nameProp: string = "Name",
+    nameProp: string = "title",
   ) => {
     const params = (client.pages.create as Mock).mock.calls.flat();
     return params.find(
@@ -141,7 +141,7 @@ describe("generateDandoriNotionPages", () => {
         expect(
           findPagePropertiesMockParam(withAllPropsTaskName).properties,
         ).toMatchObject({
-          Name: {
+          title: {
             title: [
               {
                 text: {
