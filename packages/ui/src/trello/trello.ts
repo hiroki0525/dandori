@@ -2,7 +2,7 @@ import { DandoriTask, DandoriTaskStatus } from "@dandori/core";
 import { checkApiKey, runPromisesSequentially } from "@dandori/libs";
 import { TrelloClient } from "./client";
 
-type TrelloListPropertiesMap =
+export type TrelloListPropertiesMap =
   | {
       "status.todo": string;
       "status.doing"?: string;
