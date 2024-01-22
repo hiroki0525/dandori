@@ -1,5 +1,14 @@
 # @dandori/cli
 
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [[`4b52daa`](https://github.com/hiroki0525/dandori/commit/4b52daa1a2eaa0f5dc8d83f5c0eb0f95dd22a1c9)]:
+  - @dandori/core@0.0.25
+  - @dandori/libs@0.0.25
+  - @dandori/ui@0.0.25
+
 ## 0.0.24
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @dandori/libs
 
+## 0.0.25
+
+### Patch Changes
+
+- [#103](https://github.com/hiroki0525/dandori/pull/103) [`4b52daa`](https://github.com/hiroki0525/dandori/commit/4b52daa1a2eaa0f5dc8d83f5c0eb0f95dd22a1c9) Thanks [@hiroki0525](https://github.com/hiroki0525)! - Fix default notion props
+
 ## 0.0.22
 
 ### Patch Changes
