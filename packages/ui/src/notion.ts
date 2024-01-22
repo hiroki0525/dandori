@@ -79,7 +79,7 @@ const createPageParams = (
   const {
     deadline: deadlineProp,
     description: descriptionProp,
-    name: nameProp = "Name",
+    name: nameProp = "title",
   } = propsMap;
   const pageProperties: Record<string, any> = {
     [nameProp]: {
